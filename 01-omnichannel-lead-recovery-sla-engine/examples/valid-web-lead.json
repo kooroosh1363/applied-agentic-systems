@@ -1,0 +1,15 @@
+{
+  "sourceEventId": "web-form-1001",
+  "channel": "web",
+  "name": "Jane Example",
+  "email": "jane@example.test",
+  "phone": "+1 604 555 0100",
+  "message": "The heating system stopped overnight.",
+  "consentToContact": true,
+  "serviceType": "heating-repair",
+  "estimatedValue": 1800,
+  "urgency": "high",
+  "receivedAt": "2026-08-16T12:00:00.000Z",
+  "metadata": { "campaign": "local-demo" }
+}
+

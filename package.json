@@ -1,0 +1,15 @@
+{
+  "name": "applied-agentic-systems",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "validate": "node scripts/validate-repository.mjs",
+    "check": "npm run validate && npm test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
+

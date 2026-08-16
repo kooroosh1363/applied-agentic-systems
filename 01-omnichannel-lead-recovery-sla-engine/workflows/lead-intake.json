@@ -1,0 +1,134 @@
+{
+  "name": "01 - Omnichannel Lead Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "61c5959e-2a58-407c-a33d-e2503e1f3341",
+      "name": "Lead Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-900, 0],
+      "webhookId": "lead-intake-v1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nconst incoming = $json; const b = incoming.body ?? incoming;\nconst supplied = String(incoming.headers?.['x-webhook-secret'] ?? '');\nif (!$env.LEAD_WEBHOOK_SECRET || supplied !== $env.LEAD_WEBHOOK_SECRET) throw new Error('unauthorized webhook');\nconst allowed = ['web','email','instagram','whatsapp','phone'];\nconst channel = String(b.channel ?? '').trim().toLowerCase();\nconst sourceEventId = String(b.sourceEventId ?? '').trim();\nconst email = String(b.email ?? '').trim().toLowerCase();\nconst phone = String(b.phone ?? '').replace(/[^+\\d]/g, '');\nconst message = String(b.message ?? '').trim();\nif (!allowed.includes(channel)) throw new Error('unsupported channel');\nif (!sourceEventId) throw new Error('sourceEventId is required');\nif (!email && !phone) throw new Error('email or phone is required');\nif (!message) throw new Error('message is required');\nconst idempotencyKey = crypto.createHash('sha256').update(`${channel}:${sourceEventId}`).digest('hex');\nreturn [{ json: { schemaVersion:'1.0', sourceEventId, channel, name:String(b.name??'').trim(), email, phone, message, consentToContact:b.consentToContact===true, serviceType:String(b.serviceType??'unknown').trim().toLowerCase()||'unknown', estimatedValue:Math.max(0, Number(b.estimatedValue)||0), urgency:['low','normal','high','emergency'].includes(b.urgency)?b.urgency:'normal', receivedAt:new Date(b.receivedAt??Date.now()).toISOString(), metadata:b.metadata??{}, idempotencyKey } }];"
+      },
+      "id": "d5f61044-9fd5-4c7e-a3a4-d4516d423f11",
+      "name": "Normalize & Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-680, 0]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH inserted AS (\n  INSERT INTO lead_events (idempotency_key, source_event_id, channel, payload, received_at)\n  VALUES ($1, $2, $3, $4::jsonb, $5::timestamptz)\n  ON CONFLICT (idempotency_key) DO NOTHING\n  RETURNING id\n)\nSELECT EXISTS(SELECT 1 FROM inserted) AS is_new;",
+        "options": {
+          "queryReplacement": "={{ [$json.idempotencyKey, $json.sourceEventId, $json.channel, JSON.stringify($json), $json.receivedAt] }}"
+        }
+      },
+      "id": "420b71e2-89f3-49d7-89e8-3040fc67270f",
+      "name": "Persist Idempotency Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [-450, 0],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_POSTGRES_CREDENTIAL",
+          "name": "Local Leads Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            { "id": "e79d9953-0344-444f-a230-4eec1e293966", "leftValue": "={{ $json.is_new }}", "rightValue": true, "operator": { "type": "boolean", "operation": "true", "singleValue": true } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ef66e05c-c76d-4bf3-b6c0-2c73a28af4e4",
+      "name": "Is New Event?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-230, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const lead = $('Normalize & Validate').item.json;\nlet score=10; const reasons=['valid inquiry'];\nconst up={low:0,normal:10,high:25,emergency:35}[lead.urgency]; score+=up; if(up) reasons.push(`urgency:${lead.urgency}`);\nif(lead.estimatedValue>=5000){score+=25;reasons.push('estimated_value:high')} else if(lead.estimatedValue>=1000){score+=15;reasons.push('estimated_value:medium')} else if(lead.estimatedValue>0){score+=5;reasons.push('estimated_value:known')}\nif(lead.serviceType!=='unknown'){score+=10;reasons.push('service_type:known')}\nif(lead.phone&&lead.email){score+=10;reasons.push('contactability:two_channels')}\nif(lead.consentToContact){score+=10;reasons.push('contact_consent:true')}\nscore=Math.min(100,score); const priority=score>=70?'high':score>=40?'medium':'low'; const slaMinutes=priority==='high'?15:priority==='medium'?60:240;\nconst humanHandoff=lead.urgency==='emergency'||score>=70;\nreturn [{json:{...lead,score,priority,slaMinutes,reasons,humanHandoff,action:humanHandoff?'human_handoff':lead.consentToContact?'safe_followup':'await_consent'}}];"
+      },
+      "id": "080e5dac-2c72-403d-b761-33b4a97f7c0d",
+      "name": "Score & Decide",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [0, -120]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH upserted AS (\n  INSERT INTO leads (idempotency_key, channel, name, email, phone, message, service_type, estimated_value, urgency, score, priority, sla_due_at, status, consent_to_contact)\n  VALUES ($1,$2,$3,NULLIF($4,''),NULLIF($5,''),$6,$7,$8,$9,$10,$11,now()+make_interval(mins => $12),$13,$14)\n  ON CONFLICT (idempotency_key) DO UPDATE SET updated_at=now()\n  RETURNING id, status\n), scheduled AS (\n  INSERT INTO followup_attempts (lead_id, attempt_number, provider, status, next_retry_at)\n  SELECT id, 1, 'local-mock', 'pending', now() FROM upserted WHERE $15 = 'safe_followup'\n  ON CONFLICT (lead_id, attempt_number) DO NOTHING\n)\nSELECT id, status FROM upserted;",
+        "options": {
+          "queryReplacement": "={{ [$json.idempotencyKey,$json.channel,$json.name,$json.email,$json.phone,$json.message,$json.serviceType,$json.estimatedValue,$json.urgency,$json.score,$json.priority,$json.slaMinutes,$json.action,$json.consentToContact,$json.action] }}"
+        }
+      },
+      "id": "8cdb281c-c918-42fe-8909-e29fd7e29901",
+      "name": "Upsert Lead",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [230, -120],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_POSTGRES_CREDENTIAL",
+          "name": "Local Leads Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'accepted', priority: $('Score & Decide').item.json.priority, score: $('Score & Decide').item.json.score, slaMinutes: $('Score & Decide').item.json.slaMinutes, humanHandoff: $('Score & Decide').item.json.humanHandoff, evidence: 'simulated' } }}",
+        "options": { "responseCode": 202 }
+      },
+      "id": "4a8bedff-3249-4372-88c0-a7f32bf93b89",
+      "name": "Accepted Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [460, -120]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { status: 'duplicate', evidence: 'automated' } }}",
+        "options": { "responseCode": 200 }
+      },
+      "id": "39df114a-e6c6-4552-abda-88e714fe9774",
+      "name": "Duplicate Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [0, 130]
+    }
+  ],
+  "connections": {
+    "Lead Webhook": { "main": [[{ "node": "Normalize & Validate", "type": "main", "index": 0 }]] },
+    "Normalize & Validate": { "main": [[{ "node": "Persist Idempotency Event", "type": "main", "index": 0 }]] },
+    "Persist Idempotency Event": { "main": [[{ "node": "Is New Event?", "type": "main", "index": 0 }]] },
+    "Is New Event?": { "main": [[{ "node": "Score & Decide", "type": "main", "index": 0 }], [{ "node": "Duplicate Response", "type": "main", "index": 0 }]] },
+    "Score & Decide": { "main": [[{ "node": "Upsert Lead", "type": "main", "index": 0 }]] },
+    "Upsert Lead": { "main": [[{ "node": "Accepted Response", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1", "saveDataErrorExecution": "all", "saveDataSuccessExecution": "none", "saveManualExecutions": true },
+  "active": false,
+  "versionId": "9c10a5c8-eedc-457b-a1b8-f3df4bab8c4a",
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}

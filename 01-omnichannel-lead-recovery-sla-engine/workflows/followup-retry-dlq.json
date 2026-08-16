@@ -1,0 +1,128 @@
+{
+  "name": "01 - Follow-up Dispatch, Retry & DLQ",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": [{ "field": "minutes", "minutesInterval": 1 }] } },
+      "id": "7b827d91-779c-4124-87c8-ad4993477a69",
+      "name": "Every Minute",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-900, 0]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT f.id AS attempt_id, f.attempt_number, l.id AS lead_id, l.idempotency_key, COALESCE(l.phone,l.email) AS destination, l.message\nFROM followup_attempts f\nJOIN leads l ON l.id=f.lead_id\nWHERE f.status='pending' AND f.next_retry_at <= now()\nORDER BY f.next_retry_at\nLIMIT 50\nFOR UPDATE OF f SKIP LOCKED;",
+        "options": {}
+      },
+      "id": "fd6f94bc-bef1-4cc5-9f42-b328174f4f97",
+      "name": "Load Due Followups",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [-680, 0],
+      "credentials": { "postgres": { "id": "LOCAL_POSTGRES_CREDENTIAL", "name": "Local Leads Postgres" } }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.MOCK_PROVIDER_URL + '/v1/messages' }}",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ idempotencyKey: $json.idempotency_key + ':attempt:' + $json.attempt_number, destination: $json.destination, message: $json.message, simulate: $json.simulate ?? '' }) }}",
+        "options": { "response": { "response": { "fullResponse": true, "neverError": true } }, "timeout": 5000 }
+      },
+      "id": "b616f01e-d7b7-4941-914a-2d4f479475f7",
+      "name": "Send Through Provider",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-450, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const source=$('Load Due Followups').item.json; const status=Number($json.statusCode??0); let route='dlq';\nif(status===202) route='delivered'; else if((status===429||status>=500||status===0)&&source.attempt_number<3) route='retry';\nreturn [{json:{...source,statusCode:status,providerBody:$json.body??{},route,backoffSeconds:Math.pow(2,source.attempt_number)*30}}];"
+      },
+      "id": "d23397c7-aa46-43a8-a63b-2079dc58ce38",
+      "name": "Classify Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-220, 0]
+    },
+    {
+      "parameters": {
+        "conditions": { "options": { "caseSensitive": true, "typeValidation": "strict" }, "conditions": [{ "id": "18b04c26-4aee-4edb-9fe3-c3af9bbab0b8", "leftValue": "={{ $json.route }}", "rightValue": "delivered", "operator": { "type": "string", "operation": "equals" } }], "combinator": "and" },
+        "options": {}
+      },
+      "id": "a54641a2-b9cb-40ac-b954-b6558196f7ad",
+      "name": "Delivered?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE followup_attempts SET status='delivered', provider_message_id=$2, next_retry_at=NULL WHERE id=$1::uuid;\nUPDATE leads SET status='followup_sent', first_response_at=COALESCE(first_response_at,now()), updated_at=now() WHERE id=$3::uuid;",
+        "options": { "queryReplacement": "={{ [$json.attempt_id, $json.providerBody.providerMessageId ?? null, $json.lead_id] }}" }
+      },
+      "id": "c53d7246-87ec-45b6-986f-72a39edcc2b5",
+      "name": "Mark Delivered",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [250, -120],
+      "credentials": { "postgres": { "id": "LOCAL_POSTGRES_CREDENTIAL", "name": "Local Leads Postgres" } }
+    },
+    {
+      "parameters": {
+        "conditions": { "options": { "caseSensitive": true, "typeValidation": "strict" }, "conditions": [{ "id": "70ab7fd9-fd13-4e6b-98f5-e98f512d00f5", "leftValue": "={{ $json.route }}", "rightValue": "retry", "operator": { "type": "string", "operation": "equals" } }], "combinator": "and" },
+        "options": {}
+      },
+      "id": "3c956d37-bde5-4a43-a5af-5817e01ea6b6",
+      "name": "Retryable?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [230, 90]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH current AS (\n UPDATE followup_attempts SET status='retry_scheduled', error_code=$2, next_retry_at=NULL WHERE id=$1::uuid RETURNING lead_id,attempt_number\n)\nINSERT INTO followup_attempts (lead_id,attempt_number,provider,status,error_code,next_retry_at)\nSELECT lead_id,attempt_number+1,'local-mock','pending',$2,now()+make_interval(secs=>$3) FROM current\nON CONFLICT (lead_id,attempt_number) DO NOTHING;",
+        "options": { "queryReplacement": "={{ [$json.attempt_id, String($json.statusCode), $json.backoffSeconds] }}" }
+      },
+      "id": "92a28569-c79d-4b0b-ab95-09538695bc9e",
+      "name": "Schedule Retry",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [480, 20],
+      "credentials": { "postgres": { "id": "LOCAL_POSTGRES_CREDENTIAL", "name": "Local Leads Postgres" } }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH failed AS (\n UPDATE followup_attempts SET status='failed',error_code=$2,next_retry_at=NULL WHERE id=$1::uuid RETURNING lead_id\n)\nINSERT INTO dead_letter_events (lead_id,operation,payload,reason)\nSELECT lead_id,'provider_followup',$3::jsonb,$2 FROM failed;",
+        "options": { "queryReplacement": "={{ [$json.attempt_id, String($json.statusCode), JSON.stringify({attemptId:$json.attempt_id,statusCode:$json.statusCode,providerBody:$json.providerBody})] }}" }
+      },
+      "id": "7109731d-f2e6-425b-92cb-90c29f75da5c",
+      "name": "Write DLQ",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [480, 170],
+      "credentials": { "postgres": { "id": "LOCAL_POSTGRES_CREDENTIAL", "name": "Local Leads Postgres" } }
+    }
+  ],
+  "connections": {
+    "Every Minute": { "main": [[{ "node": "Load Due Followups", "type": "main", "index": 0 }]] },
+    "Load Due Followups": { "main": [[{ "node": "Send Through Provider", "type": "main", "index": 0 }]] },
+    "Send Through Provider": { "main": [[{ "node": "Classify Result", "type": "main", "index": 0 }]] },
+    "Classify Result": { "main": [[{ "node": "Delivered?", "type": "main", "index": 0 }]] },
+    "Delivered?": { "main": [[{ "node": "Mark Delivered", "type": "main", "index": 0 }], [{ "node": "Retryable?", "type": "main", "index": 0 }]] },
+    "Retryable?": { "main": [[{ "node": "Schedule Retry", "type": "main", "index": 0 }], [{ "node": "Write DLQ", "type": "main", "index": 0 }]] }
+  },
+  "pinData": {},
+  "settings": { "executionOrder": "v1", "saveDataErrorExecution": "all", "saveDataSuccessExecution": "none" },
+  "active": false,
+  "versionId": "6c360028-894f-47c1-848c-0d33580b4d7e",
+  "meta": { "templateCredsSetupCompleted": false },
+  "tags": []
+}
+
