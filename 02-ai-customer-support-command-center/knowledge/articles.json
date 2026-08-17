@@ -1,0 +1,8 @@
+[
+  { "id": "KB-001", "title": "Password reset", "tags": ["account", "login", "password"], "content": "Use the password reset link on the sign-in page. The link expires after 30 minutes. Support will never request your current password." },
+  { "id": "KB-002", "title": "Refund policy", "tags": ["billing", "refund", "payment"], "content": "Eligible refund requests are reviewed within five business days. A human billing specialist must approve exceptions." },
+  { "id": "KB-003", "title": "Service unavailable", "tags": ["technical", "offline", "error"], "content": "Check the public status page, capture the error code, and retry once. Repeated failures should be escalated with the timestamp." },
+  { "id": "KB-004", "title": "Safety escalation", "tags": ["safety", "gas", "fire", "emergency"], "content": "Do not provide troubleshooting instructions for an active safety hazard. Direct the customer to local emergency services and escalate immediately." },
+  { "id": "KB-005", "title": "Product plans", "tags": ["sales", "price", "plan", "demo"], "content": "Plan selection depends on team size and required features. A sales specialist can provide a confirmed quote." }
+]
+

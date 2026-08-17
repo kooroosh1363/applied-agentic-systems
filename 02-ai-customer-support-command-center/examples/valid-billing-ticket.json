@@ -1,0 +1,1 @@
+{"schemaVersion":"1.0","sourceEventId":"email-1001","channel":"email","customerId":"customer-42","subject":"Refund request","message":"I was charged twice for invoice INV-9 and need a refund.","language":"en","receivedAt":"2026-08-17T08:00:00Z","metadata":{"tenant":"demo"}}

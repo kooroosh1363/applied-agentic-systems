@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+const names=['ticket-intake.json','approval-action.json','delivery-retry-dlq.json'];
+const flows=await Promise.all(names.map(async name=>JSON.parse(await readFile(new URL(`../workflows/${name}`,import.meta.url),'utf8'))));
+test('all workflow exports parse and use unique node names',()=>{for(const flow of flows){assert.ok(flow.nodes.length>=4);const n=flow.nodes.map(x=>x.name);assert.equal(new Set(n).size,n.length);}});
+test('every connection targets an existing node',()=>{for(const flow of flows){const n=new Set(flow.nodes.map(x=>x.name));for(const outputs of Object.values(flow.connections))for(const branch of outputs.main)for(const edge of branch)assert.ok(n.has(edge.node));}});
+test('intake contains authentication idempotency and human routing controls',()=>{const text=JSON.stringify(flows[0]);for(const required of ['SUPPORT_WEBHOOK_SECRET','idempotencyKey','ON CONFLICT','human_escalation','pending_approval'])assert.ok(text.includes(required),required);});
+test('approval requires an identified reviewer and explicit action',()=>{const text=JSON.stringify(flows[1]);for(const required of ['reviewer','approved','rejected','audit_log'])assert.ok(text.includes(required),required);});
+test('delivery implements bounded retries, backoff, rate limit and DLQ',()=>{const text=JSON.stringify(flows[2]);for(const required of ['attempt_number>=3','backoffSeconds','429','dead_letter_events','SKIP LOCKED'])assert.ok(text.includes(required),required);});

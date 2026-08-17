@@ -22,7 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Materialize non-secret local configuration
-        run: cp 01-omnichannel-lead-recovery-sla-engine/.env.example 01-omnichannel-lead-recovery-sla-engine/.env
-      - name: Validate Docker Compose
-        run: docker compose -f 01-omnichannel-lead-recovery-sla-engine/docker-compose.yml config --quiet
+      - name: Validate every Docker Compose project
+        run: |
+          for project in 01-omnichannel-lead-recovery-sla-engine 02-ai-customer-support-command-center; do
+            cp "$project/.env.example" "$project/.env"
+            docker compose --env-file "$project/.env" -f "$project/docker-compose.yml" config --quiet
+          done
