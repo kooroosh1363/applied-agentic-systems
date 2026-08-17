@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/ticket-event.schema.json",
+  "title": "Support Ticket Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "sourceEventId", "channel", "customerId", "message", "receivedAt"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "sourceEventId": {"type": "string", "minLength": 1, "maxLength": 128},
+    "channel": {"enum": ["email", "whatsapp", "instagram", "webchat"]},
+    "customerId": {"type": "string", "minLength": 1, "maxLength": 128},
+    "subject": {"type": "string", "maxLength": 300},
+    "message": {"type": "string", "minLength": 1, "maxLength": 10000},
+    "language": {"type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$"},
+    "receivedAt": {"type": "string", "format": "date-time"},
+    "metadata": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean"]}}
+  }
+}

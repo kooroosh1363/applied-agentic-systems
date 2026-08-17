@@ -1,0 +1,59 @@
+name: support-command-center-local
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: "${POSTGRES_DB}", POSTGRES_USER: "${POSTGRES_USER}", POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}" }
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+      - ./database/002_seed.sql:/docker-entrypoint-initdb.d/002_seed.sql:ro
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"], interval: 5s, timeout: 3s, retries: 20 }
+    networks: [support-net]
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redis-data:/data"]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 20 }
+    networks: [support-net]
+  support-engine:
+    build: { context: ., dockerfile: Dockerfile.engine }
+    environment: { PORT: 8082, AI_MODE: deterministic }
+    ports: ["${ENGINE_PORT}:8082"]
+    healthcheck: { test: ["CMD", "wget", "-qO-", "http://localhost:8082/health"], interval: 5s, timeout: 3s, retries: 20 }
+    networks: [support-net]
+  n8n:
+    image: n8nio/n8n:1.106.3
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_DATABASE: "${POSTGRES_DB}"
+      DB_POSTGRESDB_USER: "${POSTGRES_USER}"
+      DB_POSTGRESDB_PASSWORD: "${POSTGRES_PASSWORD}"
+      N8N_ENCRYPTION_KEY: "${N8N_ENCRYPTION_KEY}"
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      SUPPORT_WEBHOOK_SECRET: "${SUPPORT_WEBHOOK_SECRET}"
+      SUPPORT_ENGINE_URL: http://support-engine:8082
+    ports: ["${N8N_PORT}:5678"]
+    volumes: ["n8n-data:/home/node/.n8n", "./workflows:/project/workflows:ro"]
+    depends_on: { postgres: { condition: service_healthy }, redis: { condition: service_healthy }, support-engine: { condition: service_healthy } }
+    networks: [support-net]
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports: ["${MAILPIT_PORT}:8025"]
+    networks: [support-net]
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes: ["./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro"]
+    ports: ["${PROMETHEUS_PORT}:9090"]
+    networks: [support-net]
+  grafana:
+    image: grafana/grafana-oss:12.1.0
+    environment: { GF_SECURITY_ADMIN_USER: admin, GF_SECURITY_ADMIN_PASSWORD: local-demo-only }
+    volumes: ["./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro", "./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro"]
+    ports: ["${GRAFANA_PORT}:3000"]
+    depends_on: [prometheus]
+    networks: [support-net]
+networks: { support-net: { driver: bridge } }
+volumes: { postgres-data: {}, redis-data: {}, n8n-data: {} }

@@ -8,7 +8,10 @@ const required = [
   'docs/standards/definition-of-done.md',
   '01-omnichannel-lead-recovery-sla-engine/README.md',
   '01-omnichannel-lead-recovery-sla-engine/workflows/lead-intake.json',
-  '01-omnichannel-lead-recovery-sla-engine/contracts/lead-event.schema.json'
+  '01-omnichannel-lead-recovery-sla-engine/contracts/lead-event.schema.json',
+  '02-ai-customer-support-command-center/README.md',
+  '02-ai-customer-support-command-center/workflows/ticket-intake.json',
+  '02-ai-customer-support-command-center/contracts/ticket-event.schema.json'
 ];
 
 for (const path of required) await access(join(root, path));
@@ -43,4 +46,3 @@ for (const file of files.filter((path) => !path.endsWith('.png') && !path.endsWi
 }
 
 console.log(`Validated ${files.length} repository files.`);
-
