@@ -13,7 +13,7 @@ This project treats lead recovery as a stateful reliability problem—not as bul
 - one canonical lead-event contract for `web`, `email`, `instagram`, `whatsapp`, and `phone`;
 - deterministic normalization and explainable lead scoring;
 - stable idempotency keys and database uniqueness constraints;
-- importable n8n lead-intake and asynchronous retry/DLQ workflows;
+- importable n8n intake and asynchronous retry/DLQ workflows;
 - PostgreSQL schema for leads, events, follow-ups, audit history, and DLQ;
 - retry-aware local mock provider with controllable failure injection;
 - SLA classification and human-handoff decisions;

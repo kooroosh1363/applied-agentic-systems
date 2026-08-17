@@ -25,7 +25,7 @@ Create a PostgreSQL credential in n8n:
 | Port | `5432` |
 | SSL | disabled for this local network only |
 
-Name it `Local Leads Postgres`, import both JSON files from `workflows/`, select the credential on every PostgreSQL node, and activate both workflows.
+Name it `Local Leads Postgres`, import `workflows/lead-intake.json`, select the credential on both PostgreSQL nodes, and activate the workflow.
 
 ## Stop
 
@@ -40,3 +40,4 @@ docker compose down --volumes
 ```
 
 Do not reuse the example passwords outside the isolated local environment.
+
