@@ -1,0 +1,11 @@
+{
+  "name": "omnichannel-lead-recovery-sla-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:mock": "node src/server.mjs",
+    "test": "node --test"
+  }
+}
+
