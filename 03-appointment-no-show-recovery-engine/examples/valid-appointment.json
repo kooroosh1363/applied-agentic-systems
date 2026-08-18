@@ -1,0 +1,1 @@
+{"schemaVersion":"1.0","sourceEventId":"web-3001","channel":"web","customerId":"cust-42","resourceId":"room-1","serviceType":"consultation","startsAt":"2026-08-20T10:00:00Z","durationMinutes":60,"timezone":"Asia/Tbilisi","estimatedValue":150,"consentToReminders":true,"receivedAt":"2026-08-18T08:00:00Z","metadata":{"tenant":"demo"}}

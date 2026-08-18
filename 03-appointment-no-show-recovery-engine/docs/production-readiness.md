@@ -1,0 +1,3 @@
+# Production readiness
+
+Implemented: versioned input, durable idempotency, database-level calendar lock, explicit lifecycle, reminder consent, waitlist ordering, attendance evidence, recovery boundaries, completed-only revenue, bounded retry/DLQ, health, metrics, tests, pinned images, and local setup. Before production: real calendar/provider contract tests, signed webhooks/cancellation links, RBAC/tenant isolation, hold-expiry worker, payment/deposit policy, DST test matrix, load/soak tests, backup/restore drill, alert/runbook, privacy retention, accessibility, legal review, and measured SLOs.

@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate every Docker Compose project
         run: |
-          for project in 01-omnichannel-lead-recovery-sla-engine 02-ai-customer-support-command-center; do
+          for project in 01-omnichannel-lead-recovery-sla-engine 02-ai-customer-support-command-center 03-appointment-no-show-recovery-engine; do
             cp "$project/.env.example" "$project/.env"
             docker compose --env-file "$project/.env" -f "$project/docker-compose.yml" config --quiet
           done

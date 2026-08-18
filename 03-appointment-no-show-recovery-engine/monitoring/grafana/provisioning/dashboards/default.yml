@@ -1,0 +1,2 @@
+apiVersion: 1
+providers: [{name: appointments,folder: Appointments,type: file,options: {path: /var/lib/grafana/dashboards}}]
