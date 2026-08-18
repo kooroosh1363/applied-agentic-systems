@@ -1,0 +1,3 @@
+# Threat model
+
+Assets include calendar capacity, customer contact/attendance, reminder consent, and revenue evidence. Threats include forged/replayed bookings, double booking, appointment enumeration, unauthorized cancellation, reminder abuse, waitlist favoritism, false no-show recording, and KPI inflation. Implemented controls include shared-secret ingress, durable idempotency, database exclusion, deterministic ranking, explicit actor, consent filtering, audit rows, and simulated labels. Production requires HMAC provider signatures, SSO/RBAC/MFA, tenant isolation, encryption, rate limits, retention/deletion, signed cancellation links, and fraud monitoring.

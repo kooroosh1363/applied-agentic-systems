@@ -11,7 +11,10 @@ const required = [
   '01-omnichannel-lead-recovery-sla-engine/contracts/lead-event.schema.json',
   '02-ai-customer-support-command-center/README.md',
   '02-ai-customer-support-command-center/workflows/ticket-intake.json',
-  '02-ai-customer-support-command-center/contracts/ticket-event.schema.json'
+  '02-ai-customer-support-command-center/contracts/ticket-event.schema.json',
+  '03-appointment-no-show-recovery-engine/README.md',
+  '03-appointment-no-show-recovery-engine/workflows/appointment-intake.json',
+  '03-appointment-no-show-recovery-engine/contracts/appointment-event.schema.json'
 ];
 
 for (const path of required) await access(join(root, path));

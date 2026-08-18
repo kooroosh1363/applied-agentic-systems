@@ -35,7 +35,7 @@ Every project must provide evidence for its claims:
 |---:|---|---|
 | 01 | [Omnichannel Lead Recovery & SLA Engine](01-omnichannel-lead-recovery-sla-engine/) | Implemented |
 | 02 | [AI Customer Support Command Center](02-ai-customer-support-command-center/) | Implemented |
-| 03 | Appointment & No-Show Recovery Engine | Planned |
+| 03 | [Appointment & No-Show Recovery Engine](03-appointment-no-show-recovery-engine/) | Implemented |
 | 04 | Review & Reputation Recovery System | Planned |
 | 05 | Quote-to-Cash Automation | Planned |
 | 06-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
@@ -46,7 +46,7 @@ Every project must provide evidence for its claims:
 npm run check
 ```
 
-Project 01 can also be started locally with Docker:
+Each implemented project can also be started locally with Docker. For example:
 
 ```bash
 cd 01-omnichannel-lead-recovery-sla-engine
