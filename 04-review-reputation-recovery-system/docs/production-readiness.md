@@ -1,0 +1,3 @@
+# Production readiness
+
+Implemented: versioned contract, idempotency, redaction, independent invite/recovery decisions, no-gating invariant, neutral template version, opt-out/cooldown rules, identified human recovery, provider-event uniqueness, verified-only KPI, bounded retry/DLQ, health, metrics, tests, CI, pinned images, and zero-cost local setup. Before production: current platform-policy/legal review, HMAC webhooks, real provider contract tests, consent ledger, SSO/RBAC/tenant isolation, encryption/retention, multilingual evaluation, fairness/adversarial testing, load/soak tests, backup/restore, alert/runbook, and measured SLOs.

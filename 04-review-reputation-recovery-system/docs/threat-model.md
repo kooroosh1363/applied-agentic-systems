@@ -1,0 +1,3 @@
+# Threat model
+
+Assets include customer feedback, contact consent, recovery records, public-review eligibility, provider evidence, and reputation KPIs. Threats include forged feedback, replay, review gating, incentive manipulation, unauthorized recovery closure, PII leakage, fake provider review events, KPI inflation, and cross-tenant access. Implemented controls include shared-secret ingress, idempotency, PII redaction, no-gating invariant, neutral template version, identified human action, provider event uniqueness, explicit evidence type, bounded retry, and audit. Production requires HMAC signatures, SSO/RBAC/MFA, tenant isolation, encryption, retention/deletion, provider verification, policy/legal review, and immutable security logs.

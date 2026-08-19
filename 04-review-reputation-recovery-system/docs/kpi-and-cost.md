@@ -1,0 +1,3 @@
+# KPI and cost
+
+Measure feedback response rate, recovery case SLA, recovery resolution rate, repeat-complaint rate, neutral invite delivery, verified review conversion, verified rating distribution, opt-out rate, and DLQ rate. A click is not a review. Review conversion is `verified provider reviews / delivered neutral invites`. Recovery resolution is `resolved cases / opened cases`; resolution quality also needs repeat-complaint and customer-confirmed outcome. Local API cost is zero; hosted cost is `(hosting + messaging + provider + human recovery time) / completed service events`. Included metrics are simulated.
