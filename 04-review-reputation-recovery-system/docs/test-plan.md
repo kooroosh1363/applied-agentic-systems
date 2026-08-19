@@ -1,0 +1,3 @@
+# Test plan
+
+Automated tests cover normalization, invalid input, stable event identity, email/phone/card redaction, dissatisfaction and high-risk evidence, service completion, opt-out, verified-review exclusion, cooldown, positive flow, negative flow, explicit no-review-gating invariant, human escalation, lifecycle transitions, bounded delivery, verified-only KPI math, HTTP endpoints, workflow graph integrity, neutral-template persistence, identified recovery resolution, provider event idempotency, repository JSON/secret scans, and CI Compose rendering. Production still requires provider contract, policy/legal, fairness, load, soak, and restore tests.

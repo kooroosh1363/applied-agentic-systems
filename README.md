@@ -36,7 +36,7 @@ Every project must provide evidence for its claims:
 | 01 | [Omnichannel Lead Recovery & SLA Engine](01-omnichannel-lead-recovery-sla-engine/) | Implemented |
 | 02 | [AI Customer Support Command Center](02-ai-customer-support-command-center/) | Implemented |
 | 03 | [Appointment & No-Show Recovery Engine](03-appointment-no-show-recovery-engine/) | Implemented |
-| 04 | Review & Reputation Recovery System | Planned |
+| 04 | [Review & Reputation Recovery System](04-review-reputation-recovery-system/) | Implemented |
 | 05 | Quote-to-Cash Automation | Planned |
 | 06-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
