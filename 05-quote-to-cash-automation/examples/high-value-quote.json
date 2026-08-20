@@ -1,0 +1,1 @@
+{"schemaVersion":"1.0","sourceEventId":"crm-quote-2001","customerId":"customer-002","currency":"CAD","requestedBy":"sales@example.test","validDays":21,"discountBps":1200,"items":[{"sku":"PLATFORM","description":"Automation platform implementation","quantity":1,"unitPriceMinor":2500000,"taxRateBps":1300}]}

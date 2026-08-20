@@ -1,0 +1,3 @@
+# Production readiness
+
+Implemented: versioned contract, durable idempotency, integer money, deterministic totals, approval matrix, identified decisions, acceptance/version/expiry binding, invoice-after-acceptance rule, provider-scoped payment identity, atomic partial/final reconciliation, exceptions, verified-only cash KPI, retry/DLQ, metrics, tests, CI, pinned images, and zero-cost local setup. Before production: product/catalog source, pricing authority, legal terms, jurisdiction tax engine, real signatures/adapters, accounting ledger, refunds/chargebacks, PCI review, SSO/RBAC/tenant isolation, encryption/retention, load/concurrency tests, backup/restore, alerts/runbooks, and measured SLOs.

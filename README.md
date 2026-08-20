@@ -37,7 +37,7 @@ Every project must provide evidence for its claims:
 | 02 | [AI Customer Support Command Center](02-ai-customer-support-command-center/) | Implemented |
 | 03 | [Appointment & No-Show Recovery Engine](03-appointment-no-show-recovery-engine/) | Implemented |
 | 04 | [Review & Reputation Recovery System](04-review-reputation-recovery-system/) | Implemented |
-| 05 | Quote-to-Cash Automation | Planned |
+| 05 | [Quote-to-Cash Automation](05-quote-to-cash-automation/) | Implemented |
 | 06-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation

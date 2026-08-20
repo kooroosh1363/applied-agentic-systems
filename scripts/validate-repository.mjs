@@ -18,6 +18,9 @@ const required = [
   '04-review-reputation-recovery-system/README.md',
   '04-review-reputation-recovery-system/workflows/feedback-intake.json',
   '04-review-reputation-recovery-system/contracts/feedback-event.schema.json'
+  ,'05-quote-to-cash-automation/README.md'
+  ,'05-quote-to-cash-automation/workflows/quote-request-intake.json'
+  ,'05-quote-to-cash-automation/contracts/quote-request.schema.json'
 ];
 
 for (const path of required) await access(join(root, path));
