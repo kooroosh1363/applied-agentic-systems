@@ -1,0 +1,3 @@
+# Test plan
+
+Automated tests cover input/currency/line validation, integer money, totals, discount, tax, overflow, stable event identity, approval thresholds, state transitions, actor requirements, one-time acceptance token issuance/expiry/consumption, invoice issuance only after acceptance, frozen quote version, provider-scoped payment identity, partial/final payment, invoice/currency/amount/overpayment exceptions, verified-only cash KPI, bounded delivery, HTTP endpoints, workflow graphs, authorization, idempotency, approval audit, payment exceptions, repository JSON/secret scans, and CI Compose rendering. Production still requires provider signature, accounting contract, tax, load, concurrency, refund, chargeback, migration, and restore tests.
