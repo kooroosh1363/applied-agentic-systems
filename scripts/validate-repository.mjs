@@ -17,10 +17,13 @@ const required = [
   '03-appointment-no-show-recovery-engine/contracts/appointment-event.schema.json',
   '04-review-reputation-recovery-system/README.md',
   '04-review-reputation-recovery-system/workflows/feedback-intake.json',
-  '04-review-reputation-recovery-system/contracts/feedback-event.schema.json'
-  ,'05-quote-to-cash-automation/README.md'
-  ,'05-quote-to-cash-automation/workflows/quote-request-intake.json'
-  ,'05-quote-to-cash-automation/contracts/quote-request.schema.json'
+  '04-review-reputation-recovery-system/contracts/feedback-event.schema.json',
+  '05-quote-to-cash-automation/README.md',
+  '05-quote-to-cash-automation/workflows/quote-request-intake.json',
+  '05-quote-to-cash-automation/contracts/quote-request.schema.json',
+  '06-ai-content-intelligence-engine/README.md',
+  '06-ai-content-intelligence-engine/workflows/signal-intake.json',
+  '06-ai-content-intelligence-engine/contracts/content-signal.schema.json'
 ];
 
 for (const path of required) await access(join(root, path));

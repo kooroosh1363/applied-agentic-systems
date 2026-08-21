@@ -1,0 +1,3 @@
+# Sample input/output
+
+`examples/audience-question.json` represents a synthetic audience question. The intake output adds a stable SHA-256 idempotency key and keeps `evidenceBoundary: simulated`. A candidate such as `n8n retry DLQ guide`, backed by audience and support evidence, receives a breakdown rather than a mysterious label: demand, brand fit, evidence quality, freshness, business alignment, penalties, evidence counts, and flags. `examples/unsafe-signal.json` is penalized for injection and a sensitive guarantee and cannot bypass human review. Performance accepts `impressions >= clicks >= conversions`; only `source_verified` events enter verified KPI totals.

@@ -1,0 +1,3 @@
+# Production readiness
+
+Implemented: versioned contract, bounded inputs, idempotency, provenance, evidence labels, topic deduplication, explainable scoring, brand exclusions, prompt-injection/sensitive routing, human approval, controlled states, idempotent analytics, funnel validation, verified-only KPIs, retry/DLQ, metrics, tests, CI, pinned images, and a free local path. Before production: lawful real-source connectors, signature verification, source snapshot hashing, multilingual redaction/policy, SSO/RBAC/tenant isolation, secrets manager, calibrated offline evaluation dataset, concurrency/load tests, database migrations, backup/restore evidence, alerting/runbooks/SLOs, publishing and analytics contract tests, and measured business outcomes.

@@ -1,0 +1,3 @@
+# Test plan
+
+Automated tests cover required fields, supported sources, evidence labels, HTTP(S) URL safety, engagement bounds, stable source identities, canonical topics, similarity, duplicate evidence merging, injection and sensitive-topic detection, allowed/excluded brand themes, score explanations, evidence requirement, forced review, controlled state transitions, reviewer authorization, performance identity, impossible funnels, verified-only KPIs, retry/DLQ, HTTP endpoints, metrics, workflow parsing, inactive imports, response nodes, and control vocabulary. Repository CI also parses every JSON, scans common secret patterns, runs every Node test, and validates every Docker Compose file.
