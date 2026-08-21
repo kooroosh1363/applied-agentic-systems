@@ -1,0 +1,3 @@
+# KPI and cost
+
+Operational KPIs: accepted/duplicate/rejected signals, score latency, review-queue size and age, approval rate, evidence coverage, injection flags, DLQ rate, and time from signal to planned topic. Content KPIs: verified impressions, CTR, conversions, publishing cadence, and topic hit rate. Simulated events never contribute to verified reach or conversion. Default local API cost is zero. Hosted unit cost is `(compute + storage + approved source connectors + model usage + analytics + reviewer time) / approved topics`; revenue attribution requires a separate verified conversion model and is not claimed here.
