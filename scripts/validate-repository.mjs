@@ -23,7 +23,10 @@ const required = [
   '05-quote-to-cash-automation/contracts/quote-request.schema.json',
   '06-ai-content-intelligence-engine/README.md',
   '06-ai-content-intelligence-engine/workflows/signal-intake.json',
-  '06-ai-content-intelligence-engine/contracts/content-signal.schema.json'
+  '06-ai-content-intelligence-engine/contracts/content-signal.schema.json',
+  '07-multi-format-content-production-studio/README.md',
+  '07-multi-format-content-production-studio/workflows/brief-intake.json',
+  '07-multi-format-content-production-studio/contracts/content-brief.schema.json'
 ];
 
 for (const path of required) await access(join(root, path));

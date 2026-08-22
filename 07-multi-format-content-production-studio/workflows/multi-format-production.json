@@ -1,0 +1,173 @@
+{
+  "name": "07.2 Deterministic Multi-Format Production",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-studio-produce",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook",
+      "name": "Production Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT b.id,b.payload,b.brand_version,p.profile FROM content_briefs b JOIN brand_profiles p ON p.brand_id=b.brand_id AND p.version=b.brand_version WHERE b.id=$1 FOR UPDATE",
+        "options": {
+          "queryReplacement": "={{ [$json.briefId] }}"
+        }
+      },
+      "id": "load",
+      "name": "Lock Brief and Brand Version",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{brief:$json.payload,brand:{...$json.profile,brandId:'studio-reference',version:$json.brand_version,name:$json.profile.name ?? 'Applied Agentic Systems',audience:$json.profile.audience ?? 'automation builders'},version:$json.version ?? 1}}];"
+      },
+      "id": "prepare",
+      "name": "Prepare Immutable Production Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.STUDIO_ENGINE_URL }}/v1/packages",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "produce",
+      "name": "Produce Five Format Contracts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH upserted AS (INSERT INTO content_packages(package_key,brief_id,version,fingerprint,status,brand_id,brand_version,payload) VALUES($1,$2,$3,$4,'generated',$5,$6,$7::jsonb) ON CONFLICT(package_key,version) DO UPDATE SET package_key=EXCLUDED.package_key RETURNING id), variant_rows AS (INSERT INTO content_variants(package_id,format,payload,fingerprint) SELECT upserted.id,v.key,v.value,encode(digest(v.value::text,'sha256'),'hex') FROM upserted,jsonb_each($7::jsonb->'variants') v ON CONFLICT(package_id,format) DO NOTHING), claim_rows AS (INSERT INTO claim_ledger(package_id,claim_id,claim_text,kind,evidence_ids) SELECT upserted.id,c->>'claimId',c->>'text',c->>'kind',c->'evidenceIds' FROM upserted,jsonb_array_elements($8::jsonb->'claims') c ON CONFLICT(package_id,claim_id) DO NOTHING) SELECT id FROM upserted",
+        "options": {
+          "queryReplacement": "={{ [$json.packageId,$('Lock Brief and Brand Version').item.json.id,$json.version,$json.fingerprint,$json.brand.brandId,$json.brand.version,JSON.stringify($json),JSON.stringify($('Lock Brief and Brand Version').item.json.payload)] }}"
+        }
+      },
+      "id": "persist",
+      "name": "Persist Package Version and Fingerprint",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {generated:true,packageId:$json.id,version:$('Produce Five Format Contracts').item.json.version,evidence:'simulated-output'} }}"
+      },
+      "id": "response",
+      "name": "Production Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1100,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Production Request": {
+      "main": [
+        [
+          {
+            "node": "Lock Brief and Brand Version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lock Brief and Brand Version": {
+      "main": [
+        [
+          {
+            "node": "Prepare Immutable Production Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Immutable Production Input": {
+      "main": [
+        [
+          {
+            "node": "Produce Five Format Contracts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Produce Five Format Contracts": {
+      "main": [
+        [
+          {
+            "node": "Persist Package Version and Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Package Version and Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "Production Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "tags": []
+}

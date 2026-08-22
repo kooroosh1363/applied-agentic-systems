@@ -1,0 +1,173 @@
+{
+  "name": "07.5 Approved Package Export Manifest",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-studio-export",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook",
+      "name": "Export Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT p.id,p.version,p.status,p.payload,COALESCE(jsonb_agg(jsonb_build_object('role',r.role,'actor',r.actor,'status',r.status)) FILTER(WHERE r.id IS NOT NULL),'[]'::jsonb) approvals FROM content_packages p LEFT JOIN review_decisions r ON r.package_id=p.id AND r.package_version=p.version WHERE p.id=$1 GROUP BY p.id",
+        "options": {
+          "queryReplacement": "={{ [$json.packageId] }}"
+        }
+      },
+      "id": "load",
+      "name": "Load Approved Package and Human Evidence",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($json.status !== 'approved') throw new Error('approved package required'); return [{json:{package:{...$json.payload,status:'approved'},approvals:$json.approvals}}];"
+      },
+      "id": "guard",
+      "name": "Require Approved Immutable Version",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.STUDIO_ENGINE_URL }}/v1/export",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "manifest",
+      "name": "Build Fingerprinted Export Manifest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO export_manifests(package_id,package_version,manifest,fingerprint) VALUES($1,$2,$3::jsonb,$4) ON CONFLICT(package_id,package_version) DO NOTHING; UPDATE content_packages SET status='export_ready',updated_at=now() WHERE id=$1 AND version=$2 AND status='approved' RETURNING id",
+        "options": {
+          "queryReplacement": "={{ [$('Load Approved Package and Human Evidence').item.json.id,$('Load Approved Package and Human Evidence').item.json.version,JSON.stringify($json),$json.fingerprint] }}"
+        }
+      },
+      "id": "persist",
+      "name": "Persist Export Evidence Once",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {exportReady:true,packageId:$('Build Fingerprinted Export Manifest').item.json.packageId,version:$('Build Fingerprinted Export Manifest').item.json.version,files:$('Build Fingerprinted Export Manifest').item.json.files} }}"
+      },
+      "id": "response",
+      "name": "Export Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1100,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Export Request": {
+      "main": [
+        [
+          {
+            "node": "Load Approved Package and Human Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Approved Package and Human Evidence": {
+      "main": [
+        [
+          {
+            "node": "Require Approved Immutable Version",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Require Approved Immutable Version": {
+      "main": [
+        [
+          {
+            "node": "Build Fingerprinted Export Manifest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Fingerprinted Export Manifest": {
+      "main": [
+        [
+          {
+            "node": "Persist Export Evidence Once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Export Evidence Once": {
+      "main": [
+        [
+          {
+            "node": "Export Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "tags": []
+}

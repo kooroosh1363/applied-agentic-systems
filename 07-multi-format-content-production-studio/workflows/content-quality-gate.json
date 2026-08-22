@@ -1,0 +1,173 @@
+{
+  "name": "07.3 Evidence Brand and Format Quality Gate",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-studio-qa",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook",
+      "name": "QA Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT p.id,p.payload,b.payload AS brief,br.profile AS brand FROM content_packages p JOIN content_briefs b ON b.id=p.brief_id JOIN brand_profiles br ON br.brand_id=p.brand_id AND br.version=p.brand_version WHERE p.id=$1",
+        "options": {
+          "queryReplacement": "={{ [$json.packageId] }}"
+        }
+      },
+      "id": "load",
+      "name": "Load Exact Package Evidence and Brand",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        220,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{package:$json.payload,brief:$json.brief,brand:{...$json.brand,brandId:'studio-reference',version:$json.payload.brand.version,name:$json.brand.name ?? 'Applied Agentic Systems',audience:$json.brand.audience ?? 'automation builders'}}}];"
+      },
+      "id": "prepare",
+      "name": "Prepare Untrusted Output for QA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.STUDIO_ENGINE_URL }}/v1/qa",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "qa",
+      "name": "Run Claim Brand PII and Format QA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH run AS (INSERT INTO qa_runs(package_id,engine_version,passed,summary) VALUES($1,'deterministic-qa-v1',$2,$3::jsonb) RETURNING id), finding_rows AS (INSERT INTO qa_findings(qa_run_id,code,severity,details) SELECT run.id,f->>'code',f->>'severity',f FROM run,jsonb_array_elements($4::jsonb) f) UPDATE content_packages SET status=$5,updated_at=now() WHERE id=$1 AND status='generated' RETURNING id",
+        "options": {
+          "queryReplacement": "={{ [$('Load Exact Package Evidence and Brand').item.json.id,$json.passed,JSON.stringify({...$json.summary,requiredRoles:$json.requiredRoles}),JSON.stringify($json.findings),$json.decision] }}"
+        }
+      },
+      "id": "persist",
+      "name": "Persist QA Findings and State",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        880,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {passed:$('Run Claim Brand PII and Format QA').item.json.passed,decision:$('Run Claim Brand PII and Format QA').item.json.decision,requiredRoles:$('Run Claim Brand PII and Format QA').item.json.requiredRoles,findings:$('Run Claim Brand PII and Format QA').item.json.findings} }}"
+      },
+      "id": "response",
+      "name": "QA Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1100,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "QA Request": {
+      "main": [
+        [
+          {
+            "node": "Load Exact Package Evidence and Brand",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Exact Package Evidence and Brand": {
+      "main": [
+        [
+          {
+            "node": "Prepare Untrusted Output for QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Untrusted Output for QA": {
+      "main": [
+        [
+          {
+            "node": "Run Claim Brand PII and Format QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Claim Brand PII and Format QA": {
+      "main": [
+        [
+          {
+            "node": "Persist QA Findings and State",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist QA Findings and State": {
+      "main": [
+        [
+          {
+            "node": "QA Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "tags": []
+}

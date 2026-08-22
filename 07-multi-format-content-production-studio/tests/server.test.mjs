@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {createStudioServer} from '../src/server.mjs';
+const brief=JSON.parse(await readFile(new URL('../examples/valid-content-brief.json',import.meta.url)));
+const brand=JSON.parse(await readFile(new URL('../brand/default-brand-memory.json',import.meta.url)));
+let server,base;
+test.before(async()=>{server=createStudioServer();await new Promise(r=>server.listen(0,'127.0.0.1',r));base=`http://127.0.0.1:${server.address().port}`});
+test.after(()=>new Promise(r=>server.close(r)));
+const post=async(path,body)=>{const r=await fetch(base+path,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return{status:r.status,body:await r.json()}};
+test('health describes local free path',async()=>{const r=await fetch(base+'/health');const x=await r.json();assert.equal(x.paidApis,false);assert.equal(x.formats,5)});
+test('brief API validates and fingerprints',async()=>{const x=await post('/v1/briefs',brief);assert.equal(x.status,200);assert.equal(x.body.idempotencyKey.length,64)});
+test('package API creates five variants',async()=>{const x=await post('/v1/packages',{brief,brand});assert.equal(Object.keys(x.body.variants).length,5)});
+test('QA API requests review for valid package',async()=>{const p=(await post('/v1/packages',{brief,brand})).body;const x=await post('/v1/qa',{package:p,brief,brand});assert.equal(x.body.decision,'needs_review')});
+test('export API rejects unapproved package',async()=>{const p=(await post('/v1/packages',{brief,brand})).body;assert.equal((await post('/v1/export',{package:p})).status,400)});
+test('delivery API simulates bounded rate limit',async()=>{const x=await post('/v1/deliver',{simulate:'rate_limit',attempt:1});assert.equal(x.status,429);assert.equal(x.body.outcome,'retry')});
+test('unknown route is 404',async()=>assert.equal((await fetch(base+'/missing')).status,404));
+test('metrics are Prometheus text',async()=>{const r=await fetch(base+'/metrics');assert.match(await r.text(),/content_studio_packages_total/) });
