@@ -1,0 +1,139 @@
+{
+  "name": "07.1 Versioned Content Brief Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-studio-briefs",
+        "responseMode": "responseNode"
+      },
+      "id": "webhook",
+      "name": "Brief Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if ($headers['x-brief-secret'] !== $env.BRIEF_WEBHOOK_SECRET) throw new Error('unauthorized'); return $input.all();"
+      },
+      "id": "auth",
+      "name": "Authenticate Brief",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.STUDIO_ENGINE_URL }}/v1/briefs",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json }}"
+      },
+      "id": "validate",
+      "name": "Validate Contract and Idempotency",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH upserted AS (INSERT INTO content_briefs(idempotency_key,source_event_id,campaign_id,topic_id,brand_id,brand_version,payload) VALUES($1,$2,$3,$4,'studio-reference',$5,$6::jsonb) ON CONFLICT(idempotency_key) DO UPDATE SET idempotency_key=EXCLUDED.idempotency_key RETURNING id), evidence_rows AS (INSERT INTO brief_evidence(brief_id,evidence_id,title,summary,source_url,evidence_type) SELECT upserted.id,e->>'evidenceId',e->>'title',e->>'summary',NULLIF(e->>'sourceUrl',''),e->>'evidenceType' FROM upserted,jsonb_array_elements($6::jsonb->'evidence') e ON CONFLICT(brief_id,evidence_id) DO NOTHING) SELECT id FROM upserted",
+        "options": {
+          "queryReplacement": "={{ [$json.idempotencyKey,$json.brief.sourceEventId,$json.brief.campaignId,$json.brief.topicId,$json.brief.brandVersion,JSON.stringify($json.brief)] }}"
+        }
+      },
+      "id": "persist",
+      "name": "Persist Brief and Evidence Once",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        660,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "REPLACE_ME",
+          "name": "Local Studio Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {accepted:true,briefId:$json.id,evidenceBoundary:'contract-validated'} }}"
+      },
+      "id": "response",
+      "name": "Brief Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Brief Webhook": {
+      "main": [
+        [
+          {
+            "node": "Authenticate Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Authenticate Brief": {
+      "main": [
+        [
+          {
+            "node": "Validate Contract and Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Contract and Idempotency": {
+      "main": [
+        [
+          {
+            "node": "Persist Brief and Evidence Once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Brief and Evidence Once": {
+      "main": [
+        [
+          {
+            "node": "Brief Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all"
+  },
+  "active": false,
+  "tags": []
+}

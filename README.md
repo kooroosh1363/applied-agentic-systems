@@ -39,7 +39,8 @@ Every project must provide evidence for its claims:
 | 04 | [Review & Reputation Recovery System](04-review-reputation-recovery-system/) | Implemented |
 | 05 | [Quote-to-Cash Automation](05-quote-to-cash-automation/) | Implemented |
 | 06 | [AI Content Intelligence Engine](06-ai-content-intelligence-engine/) | Implemented |
-| 07-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 07 | [Multi-Format Content Production Studio](07-multi-format-content-production-studio/) | Implemented |
+| 08-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
