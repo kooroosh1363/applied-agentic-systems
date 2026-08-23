@@ -1,0 +1,2 @@
+INSERT INTO locale_profiles(locale,version,profile,active) VALUES('en-US',1,'{"direction":"ltr","language":"English"}',true),('fa-IR',1,'{"direction":"rtl","language":"Persian"}',true),('es-ES',1,'{"direction":"ltr","language":"Spanish"}',true) ON CONFLICT DO NOTHING;
+INSERT INTO glossary_versions(version,payload) VALUES(1,'{"source":"locales/glossary.json","evidence":"repository-versioned"}') ON CONFLICT DO NOTHING;

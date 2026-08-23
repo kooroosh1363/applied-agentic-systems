@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "terms": [
+    {"source":"automation","fa-IR":"اتوماسیون","es-ES":"automatización","caseSensitive":false},
+    {"source":"human review","fa-IR":"بازبینی انسانی","es-ES":"revisión humana","caseSensitive":false},
+    {"source":"evidence","fa-IR":"شواهد","es-ES":"evidencia","caseSensitive":false}
+  ],
+  "doNotTranslate": ["n8n","SHA-256","PostgreSQL"],
+  "forbidden": {"fa-IR":["درآمد تضمینی"],"es-ES":["ingresos garantizados"]}
+}

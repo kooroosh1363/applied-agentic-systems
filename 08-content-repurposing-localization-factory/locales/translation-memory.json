@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "entries": [
+    {"sourceLocale":"en-US","targetLocale":"fa-IR","source":"Reliable automation needs evidence.","target":"اتوماسیون قابل اعتماد به شواهد نیاز دارد.","approved":true},
+    {"sourceLocale":"en-US","targetLocale":"fa-IR","source":"Use versioned content and human review.","target":"از محتوای نسخه‌دار و بازبینی انسانی استفاده کنید.","approved":true},
+    {"sourceLocale":"en-US","targetLocale":"fa-IR","source":"Read the implementation guide.","target":"راهنمای پیاده‌سازی را بخوانید.","approved":true},
+    {"sourceLocale":"en-US","targetLocale":"es-ES","source":"Reliable automation needs evidence.","target":"La automatización fiable necesita evidencia.","approved":true},
+    {"sourceLocale":"en-US","targetLocale":"es-ES","source":"Use versioned content and human review.","target":"Use contenido versionado y revisión humana.","approved":true},
+    {"sourceLocale":"en-US","targetLocale":"es-ES","source":"Read the implementation guide.","target":"Lea la guía de implementación.","approved":true}
+  ]
+}

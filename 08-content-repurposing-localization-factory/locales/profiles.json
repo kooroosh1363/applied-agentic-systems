@@ -1,0 +1,5 @@
+{
+  "en-US": {"direction":"ltr","language":"English","region":"United States","dateStyle":"MM/DD/YYYY","decimalSeparator":".","requiredReviewer":"language_reviewer","sensitivePatterns":["guaranteed income","cure"]},
+  "fa-IR": {"direction":"rtl","language":"Persian","region":"Iran","dateStyle":"YYYY/MM/DD","decimalSeparator":"٫","requiredReviewer":"language_reviewer","sensitivePatterns":["درآمد تضمینی","درمان قطعی"]},
+  "es-ES": {"direction":"ltr","language":"Spanish","region":"Spain","dateStyle":"DD/MM/YYYY","decimalSeparator":",","requiredReviewer":"language_reviewer","sensitivePatterns":["ingresos garantizados","cura garantizada"]}
+}

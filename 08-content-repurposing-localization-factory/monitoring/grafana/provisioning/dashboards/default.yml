@@ -1,0 +1,6 @@
+apiVersion: 1
+providers:
+  - name: Localization Factory
+    folder: Applied Agentic Systems
+    type: file
+    options: {path: /var/lib/grafana/dashboards}
