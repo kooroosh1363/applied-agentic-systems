@@ -1,0 +1,26 @@
+services:
+  engine:
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+    environment:
+      PORT: 8089
+      MOCK_PROVIDER_MODE: 'true'
+    ports:
+      - '8089:8089'
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: publisher
+      POSTGRES_USER: publisher
+      POSTGRES_PASSWORD: local-only-change-me
+    volumes:
+      - ./database/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U publisher -d publisher']
+      interval: 5s
+      timeout: 3s
+      retries: 10
