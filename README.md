@@ -41,7 +41,8 @@ Every project must provide evidence for its claims:
 | 06 | [AI Content Intelligence Engine](06-ai-content-intelligence-engine/) | Implemented |
 | 07 | [Multi-Format Content Production Studio](07-multi-format-content-production-studio/) | Implemented |
 | 08 | [Content Repurposing & Localization Factory](08-content-repurposing-localization-factory/) | Implemented |
-| 09-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 09 | [Social Publishing & Governance System](09-social-publishing-governance-system/) | Implemented |
+| 10-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

@@ -29,7 +29,10 @@ const required = [
   '07-multi-format-content-production-studio/contracts/content-brief.schema.json',
   '08-content-repurposing-localization-factory/README.md',
   '08-content-repurposing-localization-factory/workflows/source-intake.json',
-  '08-content-repurposing-localization-factory/contracts/source-content.schema.json'
+  '08-content-repurposing-localization-factory/contracts/source-content.schema.json',
+  '09-social-publishing-governance-system/README.md',
+  '09-social-publishing-governance-system/workflows/publication-intake-policy.json',
+  '09-social-publishing-governance-system/policies/channel-policy.json'
 ];
 
 for (const path of required) await access(join(root, path));
