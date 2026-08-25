@@ -32,7 +32,10 @@ const required = [
   '08-content-repurposing-localization-factory/contracts/source-content.schema.json',
   '09-social-publishing-governance-system/README.md',
   '09-social-publishing-governance-system/workflows/publication-intake-policy.json',
-  '09-social-publishing-governance-system/policies/channel-policy.json'
+  '09-social-publishing-governance-system/policies/channel-policy.json',
+  '10-content-experimentation-revenue-attribution/README.md',
+  '10-content-experimentation-revenue-attribution/workflows/experiment-launch-guardrail.json',
+  '10-content-experimentation-revenue-attribution/examples/experiment.json'
 ];
 
 for (const path of required) await access(join(root, path));
