@@ -42,7 +42,8 @@ Every project must provide evidence for its claims:
 | 07 | [Multi-Format Content Production Studio](07-multi-format-content-production-studio/) | Implemented |
 | 08 | [Content Repurposing & Localization Factory](08-content-repurposing-localization-factory/) | Implemented |
 | 09 | [Social Publishing & Governance System](09-social-publishing-governance-system/) | Implemented |
-| 10-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 10 | [Content Experimentation & Revenue Attribution](10-content-experimentation-revenue-attribution/) | Implemented |
+| 11-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
