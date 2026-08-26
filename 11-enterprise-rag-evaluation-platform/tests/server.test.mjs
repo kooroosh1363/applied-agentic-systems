@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { createServer } from '../src/server.mjs';
+const fixture=JSON.parse(await readFile(new URL('../examples/evaluation-fixture.json',import.meta.url)));
+let server,base;
+test.before(async()=>{server=createServer();await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`});
+test.after(async()=>{await new Promise((resolve,reject)=>server.close(error=>error?reject(error):resolve()))});
+test('health exposes simulated evidence mode',async()=>{const response=await fetch(`${base}/health`);assert.equal(response.status,200);assert.equal((await response.json()).evidenceMode,'simulated')});
+test('evaluation endpoint returns gated metrics',async()=>{const response=await fetch(`${base}/evaluate`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(fixture)});const body=await response.json();assert.equal(response.status,200);assert.equal(body.summary.passed,true);assert.equal(body.results.length,3)});
+test('invalid evaluation is rejected',async()=>{const response=await fetch(`${base}/evaluate`,{method:'POST',headers:{'content-type':'application/json'},body:'{}'});assert.equal(response.status,400);assert.match((await response.json()).error,/map/)});
+test('unknown route is 404',async()=>assert.equal((await fetch(`${base}/missing`)).status,404));

@@ -1,0 +1,20 @@
+{
+  "documents": [
+    {"documentId":"doc-refund","title":"Refund policy","text":"Standard subscriptions can be refunded within 14 days of purchase. Refunds return to the original payment method.","factIds":["refund-window","refund-method"],"sourceUri":"kb://policies/refunds","version":"2026-08"},
+    {"documentId":"doc-security","title":"Account security","text":"Administrators must enable multi-factor authentication. Security incidents must be reported within one hour.","factIds":["admin-mfa","incident-sla"],"sourceUri":"kb://security/access","version":"2026-08"},
+    {"documentId":"doc-support","title":"Support service levels","text":"Priority-one tickets receive an initial response within 30 minutes. Priority-two tickets receive a response within four hours.","factIds":["p1-response","p2-response"],"sourceUri":"kb://support/sla","version":"2026-08"},
+    {"documentId":"doc-billing","title":"Billing cycles","text":"Annual plans renew on the subscription anniversary. Customers receive a reminder seven days before renewal.","factIds":["annual-renewal","renewal-reminder"],"sourceUri":"kb://billing/cycles","version":"2026-08"}
+  ],
+  "cases": [
+    {"caseId":"refund-001","question":"How long do I have to request a subscription refund and where is it sent?","relevantDocumentIds":["doc-refund"],"expectedFactIds":["refund-window","refund-method"],"tags":["policy","refund"]},
+    {"caseId":"security-001","question":"What security control is mandatory for administrators?","relevantDocumentIds":["doc-security"],"expectedFactIds":["admin-mfa"],"tags":["security"]},
+    {"caseId":"support-001","question":"What is the first response target for a priority-one support ticket?","relevantDocumentIds":["doc-support"],"expectedFactIds":["p1-response"],"tags":["sla"]}
+  ],
+  "answers": [
+    {"claims":[{"factId":"refund-window","text":"The request window is 14 days.","citations":["doc-refund"]},{"factId":"refund-method","text":"The refund goes to the original payment method.","citations":["doc-refund"]}]},
+    {"claims":[{"factId":"admin-mfa","text":"Administrators must enable multi-factor authentication.","citations":["doc-security"]}]},
+    {"claims":[{"factId":"p1-response","text":"Priority-one tickets have a 30-minute initial response target.","citations":["doc-support"]}]}
+  ],
+  "options":{"k":1},
+  "gates":{"recallAtK":1,"faithfulness":1,"citationAccuracy":1,"answerCorrectness":1}
+}
