@@ -1,0 +1,10 @@
+import { readFile } from 'node:fs/promises';
+import { evaluateCase, aggregateResults, compareRegression } from './core.mjs';
+const load = path => readFile(new URL(path, import.meta.url)).then(JSON.parse);
+const fixture = await load('../examples/evaluation-fixture.json');
+const baseline = await load('../baselines/v1.json');
+const results = fixture.cases.map((testCase,index)=>evaluateCase(testCase,fixture.documents,fixture.answers[index],fixture.options));
+const summary = aggregateResults(results,fixture.gates);
+const regression = compareRegression(summary,baseline,Number(process.env.REGRESSION_TOLERANCE || 0.02));
+console.log(JSON.stringify({summary,regression,notice:'Fixture metrics are simulated evidence, not a live RAG production benchmark.'},null,2));
+if (!summary.passed || !regression.passed) process.exitCode=1;

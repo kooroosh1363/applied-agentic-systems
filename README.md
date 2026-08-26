@@ -43,7 +43,8 @@ Every project must provide evidence for its claims:
 | 08 | [Content Repurposing & Localization Factory](08-content-repurposing-localization-factory/) | Implemented |
 | 09 | [Social Publishing & Governance System](09-social-publishing-governance-system/) | Implemented |
 | 10 | [Content Experimentation & Revenue Attribution](10-content-experimentation-revenue-attribution/) | Implemented |
-| 11-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 11 | [Enterprise RAG Evaluation Platform](11-enterprise-rag-evaluation-platform/) | Implemented |
+| 12-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

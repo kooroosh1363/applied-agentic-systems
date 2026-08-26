@@ -1,0 +1,1 @@
+{"datasetVersion":"fixture-v1","metrics":{"recallAtK":1,"precisionAtK":1,"mrr":1,"ndcgAtK":1,"faithfulness":1,"citationAccuracy":1,"answerCorrectness":1},"evidenceBoundary":"simulated"}

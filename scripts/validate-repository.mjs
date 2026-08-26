@@ -35,7 +35,12 @@ const required = [
   '09-social-publishing-governance-system/policies/channel-policy.json',
   '10-content-experimentation-revenue-attribution/README.md',
   '10-content-experimentation-revenue-attribution/workflows/experiment-launch-guardrail.json',
-  '10-content-experimentation-revenue-attribution/examples/experiment.json'
+  '10-content-experimentation-revenue-attribution/examples/experiment.json',
+  '11-enterprise-rag-evaluation-platform/README.md',
+  '11-enterprise-rag-evaluation-platform/workflows/dataset-intake-safety-gate.json',
+  '11-enterprise-rag-evaluation-platform/contracts/evaluation-case.schema.json',
+  '11-enterprise-rag-evaluation-platform/examples/evaluation-fixture.json',
+  '11-enterprise-rag-evaluation-platform/baselines/v1.json'
 ];
 
 for (const path of required) await access(join(root, path));

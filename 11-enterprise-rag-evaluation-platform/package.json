@@ -1,0 +1,1 @@
+{"name":"enterprise-rag-evaluation-platform","private":true,"type":"module","scripts":{"test":"node --test","evaluate":"node src/cli.mjs","start":"node src/server.mjs"},"engines":{"node":">=22"}}
