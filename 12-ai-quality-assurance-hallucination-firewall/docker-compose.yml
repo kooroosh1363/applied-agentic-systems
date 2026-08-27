@@ -1,0 +1,30 @@
+services:
+  firewall:
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+    environment:
+      PORT: ${PORT:-8120}
+      EVIDENCE_MODE: ${EVIDENCE_MODE:-simulated}
+    ports:
+      - "${PORT:-8120}:${PORT:-8120}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - firewall-data:/var/lib/postgresql/data
+      - ./database/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  firewall-data:
