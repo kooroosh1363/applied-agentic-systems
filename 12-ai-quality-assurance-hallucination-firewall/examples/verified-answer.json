@@ -1,0 +1,41 @@
+{
+  "request": {
+    "requestId": "req-001",
+    "prompt": "What is the refund window?",
+    "actorId": "demo-user",
+    "allowedScopes": ["public", "support"],
+    "domain": "customer-support",
+    "locale": "en"
+  },
+  "evidence": [
+    {
+      "sourceId": "policy-refund",
+      "title": "Refund policy",
+      "text": "Eligible purchases may be refunded within 14 days.",
+      "sourceUri": "local://policies/refund-v3",
+      "version": "3",
+      "validUntil": "2028-12-31T23:59:59Z",
+      "accessScopes": ["public", "support"],
+      "facts": [{"factId": "refund-window", "text": "Refund window is 14 days", "value": 14, "unit": "days"}]
+    },
+    {
+      "sourceId": "policy-shipping",
+      "title": "Shipping policy",
+      "text": "Standard shipping takes five business days.",
+      "sourceUri": "local://policies/shipping-v2",
+      "version": "2",
+      "validUntil": "2028-12-31T23:59:59Z",
+      "accessScopes": ["public"],
+      "facts": [{"factId": "shipping-time", "text": "Standard shipping takes five business days", "value": 5, "unit": "business days"}]
+    }
+  ],
+  "candidate": {
+    "responseId": "res-001",
+    "text": "Eligible purchases can be refunded within 14 days.",
+    "model": "deterministic-fixture",
+    "claims": [{"claimId": "claim-001", "text": "The refund window is 14 days", "kind": "factual", "factId": "refund-window", "citationIds": ["policy-refund"], "value": 14, "unit": "days"}]
+  },
+  "options": {"asOf": "2026-08-27T00:00:00Z"},
+  "attempt": 0,
+  "evidenceBoundary": "simulated"
+}

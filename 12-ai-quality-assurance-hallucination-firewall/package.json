@@ -1,0 +1,8 @@
+{
+  "name":"ai-quality-assurance-hallucination-firewall",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"test":"node --test","demo":"node src/cli.mjs examples/verified-answer.json","start":"node src/server.mjs"},
+  "engines":{"node":">=22"}
+}

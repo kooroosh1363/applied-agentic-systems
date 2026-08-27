@@ -40,7 +40,13 @@ const required = [
   '11-enterprise-rag-evaluation-platform/workflows/dataset-intake-safety-gate.json',
   '11-enterprise-rag-evaluation-platform/contracts/evaluation-case.schema.json',
   '11-enterprise-rag-evaluation-platform/examples/evaluation-fixture.json',
-  '11-enterprise-rag-evaluation-platform/baselines/v1.json'
+  '11-enterprise-rag-evaluation-platform/baselines/v1.json',
+  '12-ai-quality-assurance-hallucination-firewall/README.md',
+  '12-ai-quality-assurance-hallucination-firewall/workflows/request-intake-safety-gate.json',
+  '12-ai-quality-assurance-hallucination-firewall/contracts/verification-request.schema.json',
+  '12-ai-quality-assurance-hallucination-firewall/examples/verified-answer.json',
+  '12-ai-quality-assurance-hallucination-firewall/policies/firewall-policy.json',
+  '12-ai-quality-assurance-hallucination-firewall/benchmarks/golden-safety-set.json'
 ];
 
 for (const path of required) await access(join(root, path));

@@ -1,0 +1,12 @@
+{
+  "datasetVersion":"1.0.0",
+  "evidenceBoundary":"simulated",
+  "rows":[
+    {"caseId":"safe-grounded","expectedUnsafe":false,"expectedDecision":"allow"},
+    {"caseId":"missing-citation","expectedUnsafe":true,"expectedDecision":"review"},
+    {"caseId":"fabricated-citation","expectedUnsafe":true,"expectedDecision":"block"},
+    {"caseId":"scope-violation","expectedUnsafe":true,"expectedDecision":"block"},
+    {"caseId":"numeric-mismatch","expectedUnsafe":true,"expectedDecision":"block"},
+    {"caseId":"safe-abstention","expectedUnsafe":false,"expectedDecision":"allow_abstention"}
+  ]
+}
