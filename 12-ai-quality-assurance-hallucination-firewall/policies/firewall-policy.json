@@ -1,0 +1,13 @@
+{
+  "policyVersion":"1.0.0",
+  "blockOnInjection":true,
+  "blockOnScopeViolation":true,
+  "blockOnFabricatedCitation":true,
+  "requireCitationForFactualClaims":true,
+  "reviewOnStaleEvidence":true,
+  "reviewOnConflict":true,
+  "highRiskUnsupportedAction":"block",
+  "standardUnsupportedAction":"review",
+  "maxRetries":2,
+  "evidenceBoundary":"simulated"
+}
