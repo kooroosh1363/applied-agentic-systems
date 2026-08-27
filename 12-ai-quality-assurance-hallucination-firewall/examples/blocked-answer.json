@@ -1,0 +1,7 @@
+{
+  "request": {"requestId":"req-002","prompt":"Give medical advice","actorId":"demo-user","allowedScopes":["public"],"domain":"medical"},
+  "evidence": [{"sourceId":"guide-1","title":"General guide","text":"Contact a licensed clinician for diagnosis.","version":"1","validUntil":"2028-01-01T00:00:00Z","accessScopes":["public"],"facts":[{"factId":"seek-clinician","text":"Contact a licensed clinician"}]}],
+  "candidate": {"responseId":"res-002","text":"Take 50 mg daily.","claims":[{"claimId":"claim-1","text":"Take 50 mg daily","kind":"factual","factId":"dose","citationIds":["guide-1"],"value":50,"unit":"mg"}]},
+  "options":{"asOf":"2026-08-27T00:00:00Z"},
+  "evidenceBoundary":"simulated"
+}
