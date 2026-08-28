@@ -46,7 +46,13 @@ const required = [
   '12-ai-quality-assurance-hallucination-firewall/contracts/verification-request.schema.json',
   '12-ai-quality-assurance-hallucination-firewall/examples/verified-answer.json',
   '12-ai-quality-assurance-hallucination-firewall/policies/firewall-policy.json',
-  '12-ai-quality-assurance-hallucination-firewall/benchmarks/golden-safety-set.json'
+  '12-ai-quality-assurance-hallucination-firewall/benchmarks/golden-safety-set.json',
+  '13-contract-policy-compliance-copilot/README.md',
+  '13-contract-policy-compliance-copilot/workflows/contract-intake-safety.json',
+  '13-contract-policy-compliance-copilot/contracts/compliance-review.schema.json',
+  '13-contract-policy-compliance-copilot/examples/vendor-contract.json',
+  '13-contract-policy-compliance-copilot/policies/vendor-risk-policy.json',
+  '13-contract-policy-compliance-copilot/benchmarks/golden-compliance-set.json'
 ];
 
 for (const path of required) await access(join(root, path));

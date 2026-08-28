@@ -1,0 +1,4 @@
+{
+  "contract":{"contractId":"vendor-002","version":"1","jurisdiction":"bc-ca","title":"Compliant Vendor Agreement","effectiveDate":"2026-08-28T00:00:00Z","clauses":[{"clauseId":"data","clauseType":"data_protection","text":"Data is retained under the approved schedule.","terms":{"breachNoticeHours":48,"breachNoticeHoursUnit":"hours"}},{"clauseId":"liability","clauseType":"liability","text":"Liability is capped at annual fees.","terms":{"capMultiplier":1,"capMultiplierUnit":"annual fees"}},{"clauseId":"law","clauseType":"governing_law","text":"British Columbia law applies.","terms":{"jurisdiction":"bc-ca"}},{"clauseId":"termination","clauseType":"termination","text":"Thirty days notice is required.","terms":{"noticeDays":30}}]},
+  "policies":[],"options":{"asOf":"2026-08-28T00:00:00Z"},"evidenceBoundary":"simulated"
+}

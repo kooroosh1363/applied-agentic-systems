@@ -45,7 +45,8 @@ Every project must provide evidence for its claims:
 | 10 | [Content Experimentation & Revenue Attribution](10-content-experimentation-revenue-attribution/) | Implemented |
 | 11 | [Enterprise RAG Evaluation Platform](11-enterprise-rag-evaluation-platform/) | Implemented |
 | 12 | [AI Quality Assurance & Hallucination Firewall](12-ai-quality-assurance-hallucination-firewall/) | Implemented |
-| 13-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 13 | [Contract & Policy Compliance Copilot](13-contract-policy-compliance-copilot/) | Implemented |
+| 14-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

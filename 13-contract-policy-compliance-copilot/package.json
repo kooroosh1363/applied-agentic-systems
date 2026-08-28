@@ -1,0 +1,1 @@
+{"name":"contract-policy-compliance-copilot","version":"1.0.0","private":true,"type":"module","scripts":{"test":"node --test","demo":"node src/cli.mjs examples/vendor-contract.json","start":"node src/server.mjs"},"engines":{"node":">=22"}}
