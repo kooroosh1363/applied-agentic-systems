@@ -1,0 +1,24 @@
+{
+  "contract":{
+    "contractId":"vendor-001","version":"2","jurisdiction":"bc-ca","title":"Cloud Analytics Vendor Agreement","parties":["Buyer Demo","Vendor Demo"],"effectiveDate":"2026-08-28T00:00:00Z",
+    "clauses":[
+      {"clauseId":"c-liability","clauseType":"liability","text":"Vendor liability is capped at three times annual fees.","sourcePage":7,"terms":{"capMultiplier":3,"capMultiplierUnit":"annual fees"}},
+      {"clauseId":"c-law","clauseType":"governing_law","text":"This agreement is governed by the laws of Ontario.","sourcePage":12,"terms":{"jurisdiction":"ontario-ca"}},
+      {"clauseId":"c-data","clauseType":"data_protection","text":"Vendor may use unlimited data retention for service improvement.","sourcePage":9,"terms":{"breachNoticeHours":96,"breachNoticeHoursUnit":"hours"}},
+      {"clauseId":"c-termination","clauseType":"termination","text":"Either party may terminate for cause.","sourcePage":11,"terms":{}}
+    ]
+  },
+  "policies":[{
+    "policySetId":"vendor-risk-bc","version":"2026.08","jurisdiction":"bc-ca","effectiveFrom":"2026-01-01T00:00:00Z","status":"approved","approvedBy":"legal-policy-owner",
+    "rules":[
+      {"ruleId":"data-clause","title":"Data protection clause required","severity":"critical","requirementType":"required_clause","clauseType":"data_protection","remediation":"Add the approved data-protection clause."},
+      {"ruleId":"retention","title":"Unlimited retention prohibited","severity":"critical","requirementType":"prohibited_phrase","clauseType":"data_protection","phrase":"unlimited data retention","remediation":"Replace unlimited retention with an approved retention schedule."},
+      {"ruleId":"breach-sla","title":"Breach notice within 72 hours","severity":"high","requirementType":"numeric_limit","clauseType":"data_protection","field":"breachNoticeHours","operator":"lte","value":72,"unit":"hours","remediation":"Set breach notification to no more than 72 hours."},
+      {"ruleId":"liability-cap","title":"Liability cap at annual fees","severity":"high","requirementType":"numeric_limit","clauseType":"liability","field":"capMultiplier","operator":"lte","value":1,"unit":"annual fees","remediation":"Reduce the liability cap to one times annual fees."},
+      {"ruleId":"governing-law","title":"Approved governing law","severity":"high","requirementType":"allowed_value","clauseType":"governing_law","field":"jurisdiction","allowedValues":["bc-ca"],"remediation":"Use British Columbia, Canada as governing law."},
+      {"ruleId":"termination-notice","title":"Termination notice required","severity":"medium","requirementType":"required_term","clauseType":"termination","field":"noticeDays","remediation":"Add an explicit termination notice period."}
+    ]
+  }],
+  "options":{"asOf":"2026-08-28T00:00:00Z"},
+  "evidenceBoundary":"simulated"
+}
