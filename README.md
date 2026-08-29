@@ -46,7 +46,8 @@ Every project must provide evidence for its claims:
 | 11 | [Enterprise RAG Evaluation Platform](11-enterprise-rag-evaluation-platform/) | Implemented |
 | 12 | [AI Quality Assurance & Hallucination Firewall](12-ai-quality-assurance-hallucination-firewall/) | Implemented |
 | 13 | [Contract & Policy Compliance Copilot](13-contract-policy-compliance-copilot/) | Implemented |
-| 14-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 14 | [Voice-of-Customer Intelligence System](14-voice-of-customer-intelligence-system/) | Implemented |
+| 15-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
