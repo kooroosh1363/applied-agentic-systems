@@ -53,6 +53,10 @@ const required = [
   '13-contract-policy-compliance-copilot/examples/vendor-contract.json',
   '13-contract-policy-compliance-copilot/policies/vendor-risk-policy.json',
   '13-contract-policy-compliance-copilot/benchmarks/golden-compliance-set.json'
+  ,'14-voice-of-customer-intelligence-system/README.md'
+  ,'14-voice-of-customer-intelligence-system/workflows/feedback-intake-privacy-gate.json'
+  ,'14-voice-of-customer-intelligence-system/contracts/feedback-event.schema.json'
+  ,'14-voice-of-customer-intelligence-system/examples/feedback-batch.json'
 ];
 
 for (const path of required) await access(join(root, path));

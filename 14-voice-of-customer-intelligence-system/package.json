@@ -1,0 +1,12 @@
+{
+  "name": "voice-of-customer-intelligence-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test",
+    "demo": "node src/cli.mjs examples/feedback-batch.json"
+  },
+  "engines": { "node": ">=22" }
+}

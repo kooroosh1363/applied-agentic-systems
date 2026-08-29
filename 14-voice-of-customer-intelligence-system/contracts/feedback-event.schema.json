@@ -1,0 +1,19 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://example.local/voc/feedback-event.schema.json",
+  "title":"Voice of Customer Feedback Event",
+  "type":"object",
+  "required":["feedbackId","channel","receivedAt","locale","text","consent","sourceRef"],
+  "properties":{
+    "feedbackId":{"type":"string","minLength":1},
+    "channel":{"enum":["survey","support_ticket","review","social","interview","email"]},
+    "receivedAt":{"type":"string","format":"date-time"},
+    "locale":{"type":"string","minLength":2},
+    "text":{"type":"string","minLength":1,"maxLength":20000},
+    "customerRef":{"type":"string"},
+    "consent":{"type":"boolean"},
+    "sourceRef":{"type":"string","minLength":1},
+    "metadata":{"type":"object","additionalProperties":true}
+  },
+  "additionalProperties":false
+}
