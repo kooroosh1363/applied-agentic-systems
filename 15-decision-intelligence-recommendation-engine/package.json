@@ -1,0 +1,8 @@
+{
+  "name":"decision-intelligence-recommendation-engine",
+  "version":"1.0.0",
+  "private":true,
+  "type":"module",
+  "scripts":{"start":"node src/server.mjs","test":"node --test","demo":"node src/cli.mjs examples/vendor-selection.json"},
+  "engines":{"node":">=22"}
+}
