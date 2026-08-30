@@ -47,7 +47,8 @@ Every project must provide evidence for its claims:
 | 12 | [AI Quality Assurance & Hallucination Firewall](12-ai-quality-assurance-hallucination-firewall/) | Implemented |
 | 13 | [Contract & Policy Compliance Copilot](13-contract-policy-compliance-copilot/) | Implemented |
 | 14 | [Voice-of-Customer Intelligence System](14-voice-of-customer-intelligence-system/) | Implemented |
-| 15-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 15 | [Decision Intelligence & Recommendation Engine](15-decision-intelligence-recommendation-engine/) | Implemented |
+| 16-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

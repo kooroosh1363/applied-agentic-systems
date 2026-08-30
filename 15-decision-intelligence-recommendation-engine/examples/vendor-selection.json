@@ -1,0 +1,32 @@
+{
+  "sensitivityDelta":0.1,
+  "decision":{
+    "decisionId":"vendor-platform-2026","version":"1.0","title":"Select customer operations platform","domain":"procurement","riskLevel":"medium","minimumSeparation":0.05,"asOf":"2026-08-30T00:00:00Z",
+    "criteria":[
+      {"criterionId":"annual_cost","name":"Annual cost","weight":0.35,"min":0,"max":6000,"direction":"minimize","unit":"CAD","minimumReliability":0.7},
+      {"criterionId":"reliability","name":"Service reliability","weight":0.30,"min":95,"max":100,"direction":"maximize","unit":"percent","minimumReliability":0.8},
+      {"criterionId":"integration","name":"Integration coverage","weight":0.20,"min":0,"max":10,"direction":"maximize","unit":"score","minimumReliability":0.7},
+      {"criterionId":"support","name":"Support quality","weight":0.15,"min":0,"max":10,"direction":"maximize","unit":"score","minimumReliability":0.7}
+    ],
+    "constraints":[
+      {"constraintId":"budget","criterionId":"annual_cost","operator":"lte","value":5000,"reason":"Approved annual budget"},
+      {"constraintId":"uptime","criterionId":"reliability","operator":"gte","value":99.5,"reason":"Minimum operational SLA"}
+    ],
+    "evidence":[
+      {"evidenceId":"a-quote","source":"synthetic-cost-fixture","observedAt":"2026-08-20T00:00:00Z","status":"verified","reliability":0.95,"claim":"Synthetic Option A cost input"},
+      {"evidenceId":"a-sla","source":"synthetic-sla-fixture","observedAt":"2026-08-20T00:00:00Z","status":"verified","reliability":0.95,"claim":"Synthetic Option A reliability input"},
+      {"evidenceId":"a-test","source":"synthetic-sandbox-fixture","observedAt":"2026-08-21T00:00:00Z","status":"verified","reliability":0.90,"claim":"Synthetic Option A integration and support input"},
+      {"evidenceId":"b-quote","source":"synthetic-cost-fixture","observedAt":"2026-08-20T00:00:00Z","status":"verified","reliability":0.95,"claim":"Synthetic Option B cost input"},
+      {"evidenceId":"b-sla","source":"synthetic-sla-fixture","observedAt":"2026-08-20T00:00:00Z","status":"verified","reliability":0.90,"claim":"Synthetic Option B reliability input"},
+      {"evidenceId":"b-test","source":"synthetic-sandbox-fixture","observedAt":"2026-08-21T00:00:00Z","status":"verified","reliability":0.85,"claim":"Synthetic Option B integration and support input"},
+      {"evidenceId":"c-quote","source":"synthetic-cost-fixture","observedAt":"2026-08-20T00:00:00Z","status":"verified","reliability":0.95,"claim":"Synthetic Option C cost input"},
+      {"evidenceId":"c-sla","source":"synthetic-unverified-fixture","observedAt":"2026-08-20T00:00:00Z","status":"unverified","reliability":0.55,"claim":"Synthetic unverified Option C reliability input"},
+      {"evidenceId":"c-test","source":"synthetic-sandbox-fixture","observedAt":"2026-08-21T00:00:00Z","status":"verified","reliability":0.80,"claim":"Synthetic Option C integration and support input"}
+    ],
+    "options":[
+      {"optionId":"option-a","name":"Northstar","measurements":{"annual_cost":{"value":3500,"evidenceIds":["a-quote"]},"reliability":{"value":99.95,"evidenceIds":["a-sla"]},"integration":{"value":9,"evidenceIds":["a-test"]},"support":{"value":9,"evidenceIds":["a-test"]}}},
+      {"optionId":"option-b","name":"Harbor","measurements":{"annual_cost":{"value":4200,"evidenceIds":["b-quote"]},"reliability":{"value":99.7,"evidenceIds":["b-sla"]},"integration":{"value":7,"evidenceIds":["b-test"]},"support":{"value":6,"evidenceIds":["b-test"]}}},
+      {"optionId":"option-c","name":"Cedar","measurements":{"annual_cost":{"value":2400,"evidenceIds":["c-quote"]},"reliability":{"value":99.2,"evidenceIds":["c-sla"]},"integration":{"value":8,"evidenceIds":["c-test"]},"support":{"value":7,"evidenceIds":["c-test"]}}}
+    ]
+  }
+}
