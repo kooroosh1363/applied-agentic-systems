@@ -1,0 +1,21 @@
+{
+  "request":{"requestId":"research-demo-001","version":"1.0","accountName":"Synthetic Acme Analytics","accountDomain":"synthetic-acme.example","researchPurpose":"Prepare an evidence-backed account brief for human review","requestedBy":"demo-user","allowedDomains":["synthetic-acme.example","synthetic-regulator.example","synthetic-news.example"],"maxAgentSteps":8,"maxSources":10,"asOf":"2026-01-15T00:00:00Z","evidenceBoundary":"simulated"},
+  "plan":[
+    {"stepId":"s1","agent":"coordinator","tool":"fixture_search","objective":"Locate allowlisted public fixtures"},
+    {"stepId":"s2","agent":"company_researcher","tool":"source_reader","objective":"Extract company and product facts","dependsOn":["s1"]},
+    {"stepId":"s3","agent":"evidence_verifier","tool":"evidence_matcher","objective":"Verify citations and freshness","dependsOn":["s2"]},
+    {"stepId":"s4","agent":"opportunity_analyst","tool":"claim_extractor","objective":"Identify evidence-backed operational signals","dependsOn":["s3"]},
+    {"stepId":"s5","agent":"brief_composer","tool":"brief_writer","objective":"Compose a review-only account brief","dependsOn":["s4"]}
+  ],
+  "sources":[
+    {"sourceId":"src-official","url":"https://synthetic-acme.example/company/platform-update","title":"Synthetic platform update","sourceType":"official_company","publishedAt":"2025-11-20T00:00:00Z","publisher":"Synthetic Acme","content":"Synthetic Acme states that its analytics platform now supports regional data workspaces.","synthetic":true},
+    {"sourceId":"src-filing","url":"https://synthetic-regulator.example/filings/acme-2025","title":"Synthetic annual filing","sourceType":"regulatory_filing","publishedAt":"2025-12-10T00:00:00Z","publisher":"Synthetic Regulator","content":"The simulated filing reports investment in data governance and regional expansion.","synthetic":true},
+    {"sourceId":"src-news","url":"https://synthetic-news.example/business/acme-expansion","title":"Synthetic expansion report","sourceType":"reputable_press","publishedAt":"2025-12-18T00:00:00Z","publisher":"Synthetic News","content":"The fictional company is hiring data governance specialists in two regions.","synthetic":true}
+  ],
+  "claims":[
+    {"claimId":"c1","statement":"The company is investing in regional data governance capabilities.","category":"strategic_priority","topic":"governance-investment","importance":"high","polarity":"positive","sourceIds":["src-filing","src-news"]},
+    {"claimId":"c2","statement":"The platform supports regional data workspaces.","category":"product_capability","topic":"regional-workspaces","importance":"medium","polarity":"positive","sourceIds":["src-official"]}
+  ],
+  "summary":"Synthetic Acme shows evidence of regional expansion and data-governance investment. All facts require human interpretation before sales use.",
+  "recommendedNextSteps":["Have the account executive validate business relevance","Ask a human reviewer to confirm the cited sources before outreach"]
+}

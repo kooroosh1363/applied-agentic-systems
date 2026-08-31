@@ -48,7 +48,8 @@ Every project must provide evidence for its claims:
 | 13 | [Contract & Policy Compliance Copilot](13-contract-policy-compliance-copilot/) | Implemented |
 | 14 | [Voice-of-Customer Intelligence System](14-voice-of-customer-intelligence-system/) | Implemented |
 | 15 | [Decision Intelligence & Recommendation Engine](15-decision-intelligence-recommendation-engine/) | Implemented |
-| 16-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 16 | [Autonomous Sales Research Team](16-autonomous-sales-research-team/) | Implemented |
+| 17-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

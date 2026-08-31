@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';import{readdir,readFile}from'node:fs/promises';const dir=new URL('../workflows/',import.meta.url),files=(await readdir(dir)).filter(x=>x.endsWith('.json'));
+test('ships five inactive workflows',()=>assert.equal(files.length,5));
+for(const file of files)test(`${file} is importable and connected`,async()=>{const w=JSON.parse(await readFile(new URL(file,dir)));assert.equal(w.active,false);assert.equal(w.settings.executionOrder,'v1');assert.ok(w.nodes.length>=3);const names=new Set(w.nodes.map(n=>n.name));assert.equal(names.size,w.nodes.length);for(const outputs of Object.values(w.connections))for(const group of outputs.main??[])for(const edge of group)assert.ok(names.has(edge.node));});
+test('intake workflow blocks unsafe scope',async()=>assert.match(await readFile(new URL('research-intake-safety.json',dir),'utf8'),/unsafe input/));
+test('orchestration workflow enforces agent and tool allowlists',async()=>{const x=await readFile(new URL('bounded-agent-orchestration.json',dir),'utf8');assert.match(x,/allowedAgents/);assert.match(x,/allowedTools/)});
+test('verification workflow requires citations',async()=>assert.match(await readFile(new URL('source-claim-verification.json',dir),'utf8'),/citation required/));
+test('review workflow forbids outreach authorization',async()=>assert.match(await readFile(new URL('brief-human-review.json',dir),'utf8'),/outreachAuthorized/));
+test('failure workflow includes bounded retry and dlq',async()=>{const x=await readFile(new URL('retry-dlq-export.json',dir),'utf8');assert.match(x,/maxAttempts/);assert.match(x,/dlq/)});
