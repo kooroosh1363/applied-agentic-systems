@@ -1,0 +1,1 @@
+import{readFile}from'node:fs/promises';import{buildAccountBrief,buildExportManifest}from'./core.mjs';const path=process.argv[2];if(!path)throw new Error('usage: npm run demo -- <fixture.json>');const input=JSON.parse(await readFile(path,'utf8')),brief=buildAccountBrief(input);console.log(JSON.stringify({brief,manifest:buildExportManifest(brief)},null,2));

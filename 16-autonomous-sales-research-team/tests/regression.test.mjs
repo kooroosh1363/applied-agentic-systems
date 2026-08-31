@@ -1,0 +1,3 @@
+import test from'node:test';import assert from'node:assert/strict';import{readFile}from'node:fs/promises';import{normalizeResearchRequest}from'../src/core.mjs';const fixture=JSON.parse(await readFile(new URL('../examples/synthetic-account-research.json',import.meta.url)));
+test('ISO asOf timestamp is not mistaken for a phone number',()=>assert.doesNotThrow(()=>normalizeResearchRequest(fixture.request)));
+test('human text fields are still scanned for direct contact data',()=>assert.throws(()=>normalizeResearchRequest({...fixture.request,researchPurpose:'Contact +1 555 123 4567'}),/unsafe research request/));

@@ -61,6 +61,10 @@ const required = [
   ,'15-decision-intelligence-recommendation-engine/workflows/decision-intake-safety.json'
   ,'15-decision-intelligence-recommendation-engine/contracts/decision-request.schema.json'
   ,'15-decision-intelligence-recommendation-engine/examples/vendor-selection.json'
+  ,'16-autonomous-sales-research-team/README.md'
+  ,'16-autonomous-sales-research-team/workflows/research-intake-safety.json'
+  ,'16-autonomous-sales-research-team/contracts/research-request.schema.json'
+  ,'16-autonomous-sales-research-team/examples/synthetic-account-research.json'
 ];
 
 for (const path of required) await access(join(root, path));
