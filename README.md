@@ -49,7 +49,8 @@ Every project must provide evidence for its claims:
 | 14 | [Voice-of-Customer Intelligence System](14-voice-of-customer-intelligence-system/) | Implemented |
 | 15 | [Decision Intelligence & Recommendation Engine](15-decision-intelligence-recommendation-engine/) | Implemented |
 | 16 | [Autonomous Sales Research Team](16-autonomous-sales-research-team/) | Implemented |
-| 17-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 17 | [AI Incident Response Coordinator](17-ai-incident-response-coordinator/) | Implemented |
+| 18-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
