@@ -1,0 +1,28 @@
+services:
+  coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+    environment:
+      PORT: ${PORT:-8170}
+      EVIDENCE_MODE: ${EVIDENCE_MODE:-simulated}
+      MAX_ACTIONS: ${MAX_ACTIONS:-12}
+    ports: ["${PORT:-8170}:8170"]
+    healthcheck:
+      test: ["CMD","wget","-qO-","http://localhost:8170/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: incident
+      POSTGRES_PASSWORD: local_only_change_me
+      POSTGRES_DB: incident_response
+    volumes:
+      - ./database/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U incident -d incident_response"]
+      interval: 10s
+      timeout: 3s
+      retries: 5

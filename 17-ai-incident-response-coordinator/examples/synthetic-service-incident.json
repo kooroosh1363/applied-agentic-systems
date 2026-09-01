@@ -1,0 +1,19 @@
+{
+  "incident":{"incidentId":"inc-sim-001","version":"1.0","title":"Synthetic checkout degradation","description":"A fictional production checkout service has elevated errors and payment failure indicators.","service":"checkout-api","environment":"production","reportedBy":"synthetic-monitor","detectedAt":"2026-02-01T10:00:00Z","customerImpact":"major degradation for a simulated customer cohort","dataSensitivity":"none","maxActions":10,"evidenceBoundary":"simulated"},
+  "signals":[
+    {"signalId":"sig-errors","source":"monitoring","observedAt":"2026-02-01T10:01:00Z","summary":"Verified elevated errors and major degradation in the fictional checkout API.","status":"verified","confidence":0.95,"metric":"http_5xx_rate","value":18.4,"synthetic":true},
+    {"signalId":"sig-payments","source":"synthetic_fixture","observedAt":"2026-02-01T10:03:00Z","summary":"Synthetic payment failure signal correlates with the error increase.","status":"verified","confidence":0.9,"indicator":"payment_failure","synthetic":true},
+    {"signalId":"sig-log","source":"logging","observedAt":"2026-02-01T10:04:00Z","summary":"A fictional deployment dependency timeout appears in sampled logs.","status":"unverified","confidence":0.55,"indicator":"dependency_timeout","synthetic":true}
+  ],
+  "playbook":{"playbookId":"pb-checkout-degradation","version":"2.1","service":"checkout-api","approvedBy":"synthetic-operations-owner","approvedAt":"2026-01-20T00:00:00Z","steps":[
+    {"stepId":"p1","actionType":"collect_evidence","description":"Collect bounded metrics, traces, and relevant log samples.","minimumSeverity":"SEV4","ownerRole":"incident_responder","requiresApproval":false},
+    {"stepId":"p2","actionType":"page_oncall","description":"Prepare an on-call notification for human dispatch.","minimumSeverity":"SEV3","ownerRole":"incident_commander","requiresApproval":true},
+    {"stepId":"p3","actionType":"draft_status_update","description":"Draft an internal incident update using confirmed facts only.","minimumSeverity":"SEV3","ownerRole":"communications_lead","requiresApproval":false},
+    {"stepId":"p4","actionType":"rollback_release","description":"Provide rollback instructions for an authorized operator.","minimumSeverity":"SEV2","ownerRole":"service_owner","requiresApproval":true},
+    {"stepId":"p5","actionType":"restore_traffic","description":"Provide traffic restoration checks for an authorized operator after recovery evidence.","minimumSeverity":"SEV2","ownerRole":"service_owner","requiresApproval":true}
+  ]},
+  "timelineEvents":[
+    {"eventId":"evt-1","incidentId":"inc-sim-001","type":"detected","actorId":"synthetic-monitor","actorRole":"monitoring","occurredAt":"2026-02-01T10:00:00Z","summary":"Synthetic alert created the incident.","evidenceIds":["sig-errors"]},
+    {"eventId":"evt-2","incidentId":"inc-sim-001","type":"triaged","actorId":"demo-commander","actorRole":"incident_commander","occurredAt":"2026-02-01T10:05:00Z","summary":"Human commander accepted SEV2 triage for the simulation.","evidenceIds":["sig-errors","sig-payments"]}
+  ]
+}

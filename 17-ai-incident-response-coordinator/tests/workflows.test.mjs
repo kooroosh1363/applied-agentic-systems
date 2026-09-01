@@ -1,0 +1,8 @@
+import test from'node:test';import assert from'node:assert/strict';import{readdir,readFile}from'node:fs/promises';const dir=new URL('../workflows/',import.meta.url),files=(await readdir(dir)).filter(x=>x.endsWith('.json'));
+test('ships five inactive workflows',()=>assert.equal(files.length,5));
+for(const file of files)test(`${file} is importable and connected`,async()=>{const w=JSON.parse(await readFile(new URL(file,dir)));assert.equal(w.active,false);assert.equal(w.settings.executionOrder,'v1');assert.ok(w.nodes.length>=3);const names=new Set(w.nodes.map(n=>n.name));assert.equal(names.size,w.nodes.length);for(const outputs of Object.values(w.connections))for(const group of outputs.main??[])for(const edge of group)assert.ok(names.has(edge.node));});
+test('intake workflow scans unsafe incident content',async()=>assert.match(await readFile(new URL('incident-intake-triage.json',dir),'utf8'),/unsafe incident/));
+test('evidence workflow requires provenance',async()=>assert.match(await readFile(new URL('evidence-correlation-timeline.json',dir),'utf8'),/provenance required/));
+test('approval workflow forbids auto execution',async()=>assert.match(await readFile(new URL('action-approval-dispatch.json',dir),'utf8'),/autoExecute/));
+test('communications workflow forbids auto publication',async()=>assert.match(await readFile(new URL('status-communication-review.json',dir),'utf8'),/autoPublish/));
+test('recovery workflow requires evidence and bounded retry',async()=>{const x=await readFile(new URL('recovery-postmortem-retry-dlq.json',dir),'utf8');assert.match(x,/recovery evidence required/);assert.match(x,/maxAttempts/);assert.match(x,/dlq/)});

@@ -1,0 +1,1 @@
+{"name":"ai-incident-response-coordinator","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node src/server.mjs","test":"node --test","demo":"node src/cli.mjs examples/synthetic-service-incident.json"},"engines":{"node":">=22"}}
