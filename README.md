@@ -50,7 +50,8 @@ Every project must provide evidence for its claims:
 | 15 | [Decision Intelligence & Recommendation Engine](15-decision-intelligence-recommendation-engine/) | Implemented |
 | 16 | [Autonomous Sales Research Team](16-autonomous-sales-research-team/) | Implemented |
 | 17 | [AI Incident Response Coordinator](17-ai-incident-response-coordinator/) | Implemented |
-| 18-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 18 | [Agentic Procurement & Vendor Evaluation](18-agentic-procurement-vendor-evaluation/) | Implemented |
+| 19-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 

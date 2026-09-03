@@ -1,0 +1,71 @@
+{
+  "request": {
+    "requestId": "pr-sim-001",
+    "version": "1.0",
+    "title": "Synthetic service desk platform procurement",
+    "description": "Evaluate fictional vendors for a local demonstration only.",
+    "category": "software",
+    "currency": "CAD",
+    "budgetMinor": 15000000,
+    "requestedBy": "demo-requester",
+    "decisionOwner": "demo-procurement-lead",
+    "submissionDeadline": "2026-02-20T17:00:00Z",
+    "allowedCountries": ["CA", "US"],
+    "requiredDocuments": ["insurance", "security_attestation", "signed_response"],
+    "maxVendors": 8,
+    "maxAgentSteps": 8,
+    "evidenceBoundary": "simulated",
+    "criteria": [
+      {"criterionId":"security","name":"Security controls","direction":"boolean","weight":0.25,"hardConstraint":true},
+      {"criterionId":"delivery_days","name":"Implementation days","direction":"minimize","weight":0.20,"hardConstraint":true,"maximum":45},
+      {"criterionId":"technical_score","name":"Technical fit","direction":"maximize","weight":0.25,"hardConstraint":true,"minimum":70},
+      {"criterionId":"support_score","name":"Support quality","direction":"maximize","weight":0.15},
+      {"criterionId":"tco","name":"Three year TCO","direction":"minimize","weight":0.15}
+    ]
+  },
+  "vendors": [
+    {"vendorId":"vendor-a","legalName":"Northstar Systems Demo","country":"CA","domain":"https://northstar.example","declaredBy":"demo-a","restrictedPartyStatus":"clear","conflicts":[],"synthetic":true},
+    {"vendorId":"vendor-b","legalName":"Maple Operations Demo","country":"CA","domain":"https://maple.example","declaredBy":"demo-b","restrictedPartyStatus":"clear","conflicts":[],"synthetic":true},
+    {"vendorId":"vendor-c","legalName":"Cascade Tools Demo","country":"US","domain":"https://cascade.example","declaredBy":"demo-c","restrictedPartyStatus":"not_screened","conflicts":["synthetic relationship requires review"],"synthetic":true}
+  ],
+  "bids": [
+    {
+      "bidId":"bid-a","vendorId":"vendor-a","requestId":"pr-sim-001","requestVersion":"1.0","submittedAt":"2026-02-18T10:00:00Z","currency":"CAD","priceMinor":7200000,"implementationMinor":1200000,"annualSupportMinor":900000,"termYears":3,
+      "documents":["insurance","security_attestation","signed_response"],"exceptions":[],
+      "evidence":[
+        {"evidenceId":"a-security","type":"security_report","sourceUrl":"https://northstar.example/security","status":"verified","observedAt":"2026-02-10T00:00:00Z","confidence":0.95,"summary":"Synthetic verified security evidence.","synthetic":true},
+        {"evidenceId":"a-technical","type":"technical_response","sourceUrl":"https://northstar.example/technical","status":"verified","observedAt":"2026-02-11T00:00:00Z","confidence":0.92,"summary":"Synthetic technical response.","synthetic":true},
+        {"evidenceId":"a-pricing","type":"pricing_schedule","sourceUrl":"https://northstar.example/pricing","status":"verified","observedAt":"2026-02-12T00:00:00Z","confidence":0.98,"summary":"Synthetic pricing schedule.","synthetic":true},
+        {"evidenceId":"a-reference","type":"reference_check","sourceUrl":"https://northstar.example/reference","status":"verified","observedAt":"2026-02-13T00:00:00Z","confidence":0.84,"summary":"Synthetic reference check.","synthetic":true}
+      ],
+      "measurements":{"security":{"value":true,"evidenceIds":["a-security"]},"delivery_days":{"value":28,"evidenceIds":["a-technical"]},"technical_score":{"value":91,"evidenceIds":["a-technical"]},"support_score":{"value":88,"evidenceIds":["a-reference"]},"tco":{"value":11100000,"evidenceIds":["a-pricing"]}}
+    },
+    {
+      "bidId":"bid-b","vendorId":"vendor-b","requestId":"pr-sim-001","requestVersion":"1.0","submittedAt":"2026-02-19T09:00:00Z","currency":"CAD","priceMinor":6500000,"implementationMinor":1800000,"annualSupportMinor":850000,"termYears":3,
+      "documents":["insurance","security_attestation","signed_response"],"exceptions":[],
+      "evidence":[
+        {"evidenceId":"b-security","type":"security_report","sourceUrl":"https://maple.example/security","status":"verified","observedAt":"2026-02-10T00:00:00Z","confidence":0.91,"summary":"Synthetic verified security evidence.","synthetic":true},
+        {"evidenceId":"b-technical","type":"technical_response","sourceUrl":"https://maple.example/technical","status":"verified","observedAt":"2026-02-11T00:00:00Z","confidence":0.90,"summary":"Synthetic technical response.","synthetic":true},
+        {"evidenceId":"b-pricing","type":"pricing_schedule","sourceUrl":"https://maple.example/pricing","status":"verified","observedAt":"2026-02-12T00:00:00Z","confidence":0.97,"summary":"Synthetic pricing schedule.","synthetic":true},
+        {"evidenceId":"b-reference","type":"reference_check","sourceUrl":"https://maple.example/reference","status":"verified","observedAt":"2026-02-13T00:00:00Z","confidence":0.82,"summary":"Synthetic reference check.","synthetic":true}
+      ],
+      "measurements":{"security":{"value":true,"evidenceIds":["b-security"]},"delivery_days":{"value":39,"evidenceIds":["b-technical"]},"technical_score":{"value":80,"evidenceIds":["b-technical"]},"support_score":{"value":79,"evidenceIds":["b-reference"]},"tco":{"value":10850000,"evidenceIds":["b-pricing"]}}
+    },
+    {
+      "bidId":"bid-c","vendorId":"vendor-c","requestId":"pr-sim-001","requestVersion":"1.0","submittedAt":"2026-02-17T12:00:00Z","currency":"CAD","priceMinor":5800000,"implementationMinor":900000,"annualSupportMinor":700000,"termYears":3,
+      "documents":["signed_response"],"exceptions":["insurance pending"],
+      "evidence":[
+        {"evidenceId":"c-security","type":"vendor_document","sourceUrl":"https://cascade.example/security","status":"unverified","observedAt":"2026-02-10T00:00:00Z","confidence":0.55,"summary":"Synthetic unverified security statement.","synthetic":true},
+        {"evidenceId":"c-technical","type":"technical_response","sourceUrl":"https://cascade.example/technical","status":"verified","observedAt":"2026-02-11T00:00:00Z","confidence":0.81,"summary":"Synthetic technical response.","synthetic":true},
+        {"evidenceId":"c-pricing","type":"pricing_schedule","sourceUrl":"https://cascade.example/pricing","status":"verified","observedAt":"2026-02-12T00:00:00Z","confidence":0.94,"summary":"Synthetic pricing schedule.","synthetic":true},
+        {"evidenceId":"c-reference","type":"reference_check","sourceUrl":"https://cascade.example/reference","status":"verified","observedAt":"2026-02-13T00:00:00Z","confidence":0.75,"summary":"Synthetic reference check.","synthetic":true}
+      ],
+      "measurements":{"security":{"value":false,"evidenceIds":["c-security"]},"delivery_days":{"value":25,"evidenceIds":["c-technical"]},"technical_score":{"value":76,"evidenceIds":["c-technical"]},"support_score":{"value":74,"evidenceIds":["c-reference"]},"tco":{"value":8800000,"evidenceIds":["c-pricing"]}}
+    }
+  ],
+  "asOf":"2026-03-01T00:00:00Z",
+  "auditEvents":[
+    {"eventId":"evt-1","requestId":"pr-sim-001","type":"request_created","actorId":"demo-requester","actorRole":"requester","occurredAt":"2026-02-01T09:00:00Z","summary":"Synthetic procurement request created.","artifactFingerprints":[]},
+    {"eventId":"evt-2","requestId":"pr-sim-001","type":"bids_received","actorId":"demo-procurement-lead","actorRole":"procurement_lead","occurredAt":"2026-02-20T17:05:00Z","summary":"Synthetic bid set sealed for evaluation.","artifactFingerprints":[]}
+  ]
+}
