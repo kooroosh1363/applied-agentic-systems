@@ -1,0 +1,42 @@
+services:
+  coordinator:
+    build:
+      context: .
+      dockerfile: Dockerfile.engine
+    environment:
+      PORT: 8180
+      DATABASE_URL: postgres://procurement:procurement@postgres:5432/procurement
+      EVIDENCE_BOUNDARY: simulated
+    ports: ["8180:8180"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    networks: [procurement_net]
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: procurement
+      POSTGRES_PASSWORD: procurement
+      POSTGRES_DB: procurement
+    volumes:
+      - ./database/001_init.sql:/docker-entrypoint-initdb.d/001_init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U procurement -d procurement"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [procurement_net]
+  n8n:
+    image: n8nio/n8n:1.82.1
+    environment:
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+    ports: ["5678:5678"]
+    networks: [procurement_net]
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports: ["9090:9090"]
+    networks: [procurement_net]
+networks: {procurement_net: {}}
