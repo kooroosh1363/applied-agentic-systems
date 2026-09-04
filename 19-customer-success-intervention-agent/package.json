@@ -1,0 +1,1 @@
+{"name":"customer-success-intervention-agent","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node src/server.mjs","demo":"node src/cli.mjs examples/synthetic-customer-case.json","test":"node --test"},"engines":{"node":">=20"}}
