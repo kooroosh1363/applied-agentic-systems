@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/contracts/intervention-case.schema.json",
+  "title": "Customer Success Intervention Case",
+  "type": "object",
+  "required": ["caseId", "caseVersion", "customer", "policy", "signals", "asOf"],
+  "properties": {
+    "caseId": {"type": "string", "minLength": 1},
+    "caseVersion": {"type": "string", "minLength": 1},
+    "asOf": {"type": "string", "format": "date-time"},
+    "customer": {
+      "type": "object",
+      "required": ["customerId", "accountOwnerId", "segment", "region", "lifecycleStage", "contractRenewalAt", "channelConsent"],
+      "properties": {
+        "customerId": {"type": "string", "minLength": 1},
+        "channelConsent": {"type": "object"},
+        "synthetic": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "policy": {"type": "object"},
+    "signals": {"type": "array", "minItems": 1},
+    "evidenceBoundary": {"enum": ["simulated", "provider_verified"]}
+  },
+  "additionalProperties": true
+}
