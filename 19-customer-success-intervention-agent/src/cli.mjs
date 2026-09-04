@@ -1,0 +1,10 @@
+import {readFile} from 'node:fs/promises';
+import {buildAgentPlan,evaluateHealth,recommendIntervention,recordApproval,buildInterventionDraft,appendTimeline,buildManifest} from './core.mjs';
+const path=process.argv[2];if(!path)throw new Error('usage: node src/cli.mjs <case.json>');
+const input=JSON.parse(await readFile(path,'utf8'));
+const plan=buildAgentPlan(input),health=evaluateHealth(input),recommendation=recommendIntervention(input,'email');
+const approval=recordApproval(recommendation,{reviewerId:'csm-demo-reviewer',reviewerRole:'customer_success_manager',decision:'approve',rationale:'Synthetic demo review only.',reviewedAt:'2026-03-03T16:05:00Z'});
+const draft=buildInterventionDraft(input,recommendation,approval);
+const timeline=input.timelineEvents.reduce((events,event)=>appendTimeline(events,event),[]);
+const manifest=buildManifest(input,plan,health,recommendation,timeline,draft);
+console.log(JSON.stringify({plan,health,recommendation,approval,draft,manifest},null,2));

@@ -65,6 +65,18 @@ const required = [
   ,'16-autonomous-sales-research-team/workflows/research-intake-safety.json'
   ,'16-autonomous-sales-research-team/contracts/research-request.schema.json'
   ,'16-autonomous-sales-research-team/examples/synthetic-account-research.json'
+  ,'17-ai-incident-response-coordinator/README.md'
+  ,'17-ai-incident-response-coordinator/workflows/incident-intake-triage.json'
+  ,'17-ai-incident-response-coordinator/contracts/incident.schema.json'
+  ,'17-ai-incident-response-coordinator/examples/synthetic-service-incident.json'
+  ,'18-agentic-procurement-vendor-evaluation/README.md'
+  ,'18-agentic-procurement-vendor-evaluation/workflows/procurement-intake-agent-plan.json'
+  ,'18-agentic-procurement-vendor-evaluation/contracts/procurement-request.schema.json'
+  ,'18-agentic-procurement-vendor-evaluation/examples/synthetic-procurement.json'
+  ,'19-customer-success-intervention-agent/README.md'
+  ,'19-customer-success-intervention-agent/workflows/customer-signal-intake.json'
+  ,'19-customer-success-intervention-agent/contracts/intervention-case.schema.json'
+  ,'19-customer-success-intervention-agent/examples/synthetic-customer-case.json'
 ];
 
 for (const path of required) await access(join(root, path));
