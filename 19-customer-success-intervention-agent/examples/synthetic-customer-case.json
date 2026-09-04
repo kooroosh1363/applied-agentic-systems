@@ -1,0 +1,45 @@
+{
+  "caseId": "cs-case-2026-001",
+  "caseVersion": "1.0",
+  "asOf": "2026-03-03T16:00:00Z",
+  "evidenceBoundary": "simulated",
+  "customer": {
+    "customerId": "customer-demo-001",
+    "accountOwnerId": "csm-demo-12",
+    "displayName": "Synthetic Northstar Account",
+    "segment": "mid_market",
+    "region": "CA",
+    "lifecycleStage": "adoption",
+    "contractRenewalAt": "2026-05-15T00:00:00Z",
+    "channelConsent": {"email": true, "in_app": true, "phone": false},
+    "legalHold": false,
+    "activeDispute": false,
+    "paymentHardship": false,
+    "doNotContact": false,
+    "synthetic": true
+  },
+  "policy": {
+    "policyId": "customer-success-contact-policy",
+    "version": "1.0",
+    "timezone": "America/Vancouver",
+    "maxTouchesPer14Days": 2,
+    "cooldownHours": 72,
+    "quietHours": {"start": 20, "end": 8},
+    "allowedChannels": ["email", "in_app", "phone"],
+    "minimumEvidenceConfidence": 0.7
+  },
+  "previousTouches": [
+    {"touchId": "touch-demo-001", "channel": "in_app", "occurredAt": "2026-02-25T16:00:00Z", "playbookId": "adoption_tip"}
+  ],
+  "signals": [
+    {"signalId":"sig-usage-1","customerId":"customer-demo-001","type":"product_usage","source":"product_analytics","metric":"weeklyActiveDays","value":1,"unit":"days","observedAt":"2026-03-03T10:00:00Z","confidence":0.95,"providerVerified":false,"synthetic":true,"summary":"Synthetic weekly activity fixture."},
+    {"signalId":"sig-adoption-1","customerId":"customer-demo-001","type":"product_usage","source":"product_analytics","metric":"adoptionPercent","value":38,"unit":"percent","observedAt":"2026-03-03T10:05:00Z","confidence":0.95,"providerVerified":false,"synthetic":true,"summary":"Synthetic feature adoption fixture."},
+    {"signalId":"sig-support-1","customerId":"customer-demo-001","type":"support","source":"support_system","metric":"openCriticalTickets","value":1,"unit":"tickets","observedAt":"2026-03-03T11:00:00Z","confidence":0.9,"providerVerified":false,"synthetic":true,"summary":"Synthetic unresolved severity-one ticket."},
+    {"signalId":"sig-billing-1","customerId":"customer-demo-001","type":"billing","source":"billing_system","metric":"paymentDaysLate","value":0,"unit":"days","observedAt":"2026-03-03T11:10:00Z","confidence":0.98,"providerVerified":false,"synthetic":true,"summary":"Synthetic current payment state."},
+    {"signalId":"sig-relationship-1","customerId":"customer-demo-001","type":"relationship","source":"crm","metric":"relationshipScore","value":3,"unit":"one_to_five","observedAt":"2026-03-02T15:00:00Z","confidence":0.8,"providerVerified":false,"synthetic":true,"summary":"Synthetic manager-entered relationship score."}
+  ],
+  "timelineEvents": [
+    {"eventId":"evt-001","caseId":"cs-case-2026-001","type":"case_opened","actorId":"system","actorRole":"coordinator","occurredAt":"2026-03-03T16:00:00Z","summary":"Synthetic customer-success case opened.","artifactFingerprints":[]},
+    {"eventId":"evt-002","caseId":"cs-case-2026-001","type":"signals_validated","actorId":"signal-agent","actorRole":"agent","occurredAt":"2026-03-03T16:01:00Z","summary":"Five scoped fixture signals validated.","artifactFingerprints":[]}
+  ]
+}
