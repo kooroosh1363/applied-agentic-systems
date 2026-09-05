@@ -52,7 +52,8 @@ Every project must provide evidence for its claims:
 | 17 | [AI Incident Response Coordinator](17-ai-incident-response-coordinator/) | Implemented |
 | 18 | [Agentic Procurement & Vendor Evaluation](18-agentic-procurement-vendor-evaluation/) | Implemented |
 | 19 | [Customer Success Intervention Agent](19-customer-success-intervention-agent/) | Implemented |
-| 20-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 20 | [Multi-Agent Content Campaign Manager](20-multi-agent-content-campaign-manager/) | Implemented |
+| 21-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
