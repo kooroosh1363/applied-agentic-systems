@@ -1,0 +1,36 @@
+{
+  "campaignId":"campaign-demo-2026-001",
+  "version":"1.0",
+  "name":"Synthetic Operations Launch",
+  "goal":"Generate qualified demo requests from operations leaders using approved product facts.",
+  "ownerId":"marketing-owner-demo",
+  "audience":"Aggregate operations leaders at mid-market service companies.",
+  "locale":"en",
+  "currency":"CAD",
+  "budgetMinor":500000,
+  "startsAt":"2026-04-01T15:00:00Z",
+  "endsAt":"2026-04-30T23:00:00Z",
+  "brandPolicyVersion":"brand-policy-3.2",
+  "channels":["linkedin","x","email"],
+  "kpis":["qualified_demo_request","landing_page_conversion"],
+  "message":"Coordinate customer operations with evidence-backed automation and human approval.",
+  "callToAction":"Review the synthetic technical demo.",
+  "highRisk":true,
+  "regulated":false,
+  "maxAgentSteps":10,
+  "maxToolCalls":16,
+  "evidenceBoundary":"simulated",
+  "sourceAssets":[
+    {"evidenceId":"e-product-1","type":"approved_product_fact","sourceUrl":"https://docs.example/product-fact","observedAt":"2026-03-20T00:00:00Z","status":"approved","confidence":0.95,"locale":"en","summary":"Synthetic approved product capability fixture.","synthetic":true},
+    {"evidenceId":"e-brand-1","type":"brand_guide","sourceUrl":"https://docs.example/brand-guide","observedAt":"2026-03-18T00:00:00Z","status":"approved","confidence":0.9,"locale":"en","summary":"Synthetic approved brand guide fixture.","synthetic":true},
+    {"evidenceId":"e-copy-1","type":"approved_copy","sourceUrl":"https://docs.example/approved-copy","observedAt":"2026-03-22T00:00:00Z","status":"approved","confidence":0.9,"locale":"en","summary":"Synthetic approved English copy fixture.","synthetic":true},
+    {"evidenceId":"e-baseline-1","type":"performance_baseline","sourceUrl":"https://analytics.example/baseline","observedAt":"2026-03-15T00:00:00Z","status":"approved","confidence":0.8,"locale":"en","summary":"Synthetic performance baseline; not real revenue evidence.","synthetic":true}
+  ],
+  "claims":[
+    {"claimId":"claim-1","text":"The demo coordinates customer operations with explicit human approval.","evidenceIds":["e-product-1"]}
+  ],
+  "auditEvents":[
+    {"eventId":"event-001","campaignId":"campaign-demo-2026-001","type":"brief_accepted","actorId":"coordinator","actorRole":"system","occurredAt":"2026-04-01T15:00:00Z","summary":"Synthetic campaign brief accepted.","artifactFingerprints":[]},
+    {"eventId":"event-002","campaignId":"campaign-demo-2026-001","type":"work_graph_built","actorId":"coordinator-agent","actorRole":"agent","occurredAt":"2026-04-01T15:01:00Z","summary":"Bounded work graph created.","artifactFingerprints":[]}
+  ]
+}
