@@ -77,6 +77,10 @@ const required = [
   ,'19-customer-success-intervention-agent/workflows/customer-signal-intake.json'
   ,'19-customer-success-intervention-agent/contracts/intervention-case.schema.json'
   ,'19-customer-success-intervention-agent/examples/synthetic-customer-case.json'
+  ,'20-multi-agent-content-campaign-manager/README.md'
+  ,'20-multi-agent-content-campaign-manager/workflows/campaign-intake-work-graph.json'
+  ,'20-multi-agent-content-campaign-manager/contracts/campaign-brief.schema.json'
+  ,'20-multi-agent-content-campaign-manager/examples/synthetic-campaign.json'
 ];
 
 for (const path of required) await access(join(root, path));
