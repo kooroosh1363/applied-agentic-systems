@@ -53,7 +53,8 @@ Every project must provide evidence for its claims:
 | 18 | [Agentic Procurement & Vendor Evaluation](18-agentic-procurement-vendor-evaluation/) | Implemented |
 | 19 | [Customer Success Intervention Agent](19-customer-success-intervention-agent/) | Implemented |
 | 20 | [Multi-Agent Content Campaign Manager](20-multi-agent-content-campaign-manager/) | Implemented |
-| 21-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 21 | [Multi-Tenant Automation SaaS](21-multi-tenant-automation-saas/) | Review pending |
+| 22-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
 
 ## Quick validation
 
