@@ -1,0 +1,1 @@
+{"name":"multi-tenant-automation-saas","version":"1.0.0","private":true,"type":"module","scripts":{"start":"node src/server.mjs","demo":"node src/cli.mjs examples/demo.json","test":"node --test"},"engines":{"node":">=20"}}
