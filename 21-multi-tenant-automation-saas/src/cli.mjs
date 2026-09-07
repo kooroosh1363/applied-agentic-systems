@@ -1,0 +1,2 @@
+import fs from 'node:fs';import * as c from './core.mjs';
+const input=JSON.parse(fs.readFileSync(process.argv[2]||'examples/demo.json'));const s=c.createState();const t=c.createTenant(s,input.tenant);for(const m of input.members)c.addMember(s,{tenantId:t.id,...m});const runs=input.runs.map(r=>c.enqueueRun(s,{tenantId:t.id,...r}));console.log(JSON.stringify({tenant:t,runs,auditVerified:c.verifyAudit(s),spendAuthorized:false,autoPublish:false},null,2));
