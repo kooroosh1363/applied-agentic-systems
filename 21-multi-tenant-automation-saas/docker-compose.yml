@@ -1,0 +1,11 @@
+services:
+  engine:
+    image: node:22-alpine
+    working_dir: /app
+    volumes: [.:/app]
+    command: node src/server.mjs
+    ports: ["3000:3000"]
+  postgres:
+    image: postgres:16-alpine
+    environment: {POSTGRES_USER: app, POSTGRES_PASSWORD: local-only, POSTGRES_DB: multitenant}
+    ports: ["5432:5432"]
