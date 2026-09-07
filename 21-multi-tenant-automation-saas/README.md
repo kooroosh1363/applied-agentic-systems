@@ -16,8 +16,10 @@ node src/server.mjs
 
 ## قرارداد امنیتی
 
-- تمام خواندن و نوشتن‌ها tenant scoped هستند؛ شناسهٔ Tenant از body کاربر به‌تنهایی نباید مبنای مجوز باشد.
+- تمام خواندن و نوشتن‌ها tenant scoped هستند؛ Tenant و Actor از Credential معتبر استخراج می‌شوند و مقادیر body نادیده گرفته می‌شوند.
 - نقش کمتر از `operator` نمی‌تواند Run بسازد؛ API Key خام ذخیره نمی‌شود.
+- API Key با CSPRNG ساخته می‌شود، Scope و Expiry دارد و فقط hash آن ذخیره می‌شود.
 - کلید Idempotency در محدودهٔ Tenant یکتا است؛ مصرف quota تنها برای Run جدید رخ می‌دهد.
 - خطا پس از سه تلاش به DLQ می‌رود؛ Audit قابل تغییر نیست و دستکاری‌اش قابل تشخیص است.
-- در Production باید authentication مستقل، secret manager، RLS policy کامل، rate limiting و job queue پایدار افزوده شود.
+- PostgreSQL شامل RLS Policy، FORCE RLS، Usage Ledger و constraintهای lifecycle است.
+- Production همچنان به Secret Manager، durable queue، distributed rate limiting و آزمون بار واقعی نیاز دارد.
