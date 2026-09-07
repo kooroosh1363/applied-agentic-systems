@@ -1,11 +1,24 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: multitenant
+    secrets: [db_password]
+    volumes: [pgdata:/var/lib/postgresql/data, ./database:/docker-entrypoint-initdb.d:ro]
+    healthcheck: {test: [CMD-SHELL, "pg_isready -U app -d multitenant"], interval: 5s, timeout: 3s, retries: 10}
   engine:
     image: node:22-alpine
     working_dir: /app
-    volumes: [.:/app]
+    user: node
+    volumes: [.:/app:ro]
     command: node src/server.mjs
-    ports: ["3000:3000"]
-  postgres:
-    image: postgres:16-alpine
-    environment: {POSTGRES_USER: app, POSTGRES_PASSWORD: local-only, POSTGRES_DB: multitenant}
-    ports: ["5432:5432"]
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on: {postgres: {condition: service_healthy}}
+    read_only: true
+    tmpfs: [/tmp]
+    restart: unless-stopped
+secrets:
+  db_password: {file: ./secrets/db_password.txt.example}
+volumes: {pgdata: {}}
