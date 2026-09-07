@@ -1,0 +1,1 @@
+{"name":"21 Tenant Provisioning","active":false,"nodes":[{"name":"Manual intake","type":"n8n-nodes-base.manualTrigger"},{"name":"Validate tenant","type":"n8n-nodes-base.code"},{"name":"Create scoped membership","type":"n8n-nodes-base.code"}],"connections":{}}
