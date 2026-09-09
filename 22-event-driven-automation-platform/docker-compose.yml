@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: event_app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_DB: event_platform
+    secrets: [db_password]
+    volumes: [pgdata:/var/lib/postgresql/data, ./database:/docker-entrypoint-initdb.d:ro]
+    healthcheck: {test: [CMD-SHELL, "pg_isready -U event_app -d event_platform"], interval: 5s, timeout: 3s, retries: 10}
+  engine:
+    image: node:22-alpine
+    working_dir: /app
+    user: node
+    volumes: [.:/app:ro]
+    command: node src/server.mjs
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on: {postgres: {condition: service_healthy}}
+    read_only: true
+    tmpfs: [/tmp]
+    restart: unless-stopped
+secrets:
+  db_password: {file: ./secrets/db_password.txt.example}
+volumes:
+  pgdata: {}
