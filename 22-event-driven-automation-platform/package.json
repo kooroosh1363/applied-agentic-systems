@@ -1,0 +1,1 @@
+{"name":"event-driven-automation-platform","version":"1.0.0","private":true,"type":"module","scripts":{"demo":"node src/cli.mjs examples/demo.json","start":"node src/server.mjs","test":"node --test"},"engines":{"node":">=20"}}
