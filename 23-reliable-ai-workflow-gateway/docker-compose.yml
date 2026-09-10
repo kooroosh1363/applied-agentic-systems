@@ -1,0 +1,15 @@
+services:
+  gateway:
+    image: node:22-alpine
+    user: node
+    working_dir: /app
+    command: node src/server.mjs
+    environment:
+      GATEWAY_TOKEN: ${GATEWAY_TOKEN:?Set a random token of at least 32 characters}
+    ports: ["127.0.0.1:3023:3000"]
+    volumes: [".:/app:ro"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 64
