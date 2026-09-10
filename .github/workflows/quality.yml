@@ -28,3 +28,7 @@ jobs:
             cp "$project/.env.example" "$project/.env"
             docker compose --env-file "$project/.env" -f "$project/docker-compose.yml" config --quiet
           done
+      - name: Validate Project 23 Compose with ephemeral credential
+        run: |
+          export GATEWAY_TOKEN="$(openssl rand -hex 32)"
+          docker compose -f 23-reliable-ai-workflow-gateway/docker-compose.yml config --quiet
