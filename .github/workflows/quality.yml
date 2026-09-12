@@ -32,3 +32,7 @@ jobs:
         run: |
           export GATEWAY_TOKEN="$(openssl rand -hex 32)"
           docker compose -f 23-reliable-ai-workflow-gateway/docker-compose.yml config --quiet
+      - name: Validate Project 24 Compose configuration
+        env:
+          CONTROL_CREDENTIALS: '[]'
+        run: docker compose -f 24-automation-control-plane/docker-compose.yml config --quiet

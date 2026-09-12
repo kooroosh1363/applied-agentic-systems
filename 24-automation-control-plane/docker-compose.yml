@@ -1,0 +1,15 @@
+services:
+  control:
+    image: node:22-alpine
+    user: node
+    working_dir: /app
+    command: node src/server.mjs
+    environment:
+      CONTROL_CREDENTIALS: ${CONTROL_CREDENTIALS:?Provide JSON credential configuration}
+    ports: ["127.0.0.1:3024:3000"]
+    volumes: [".:/app:ro"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 64

@@ -56,7 +56,8 @@ Every project must provide evidence for its claims:
 | 21 | [Multi-Tenant Automation SaaS](21-multi-tenant-automation-saas/) | Implemented |
 | 22 | [Event-Driven Automation Platform](22-event-driven-automation-platform/) | Implemented |
 | 23 | [Reliable AI Workflow Gateway](23-reliable-ai-workflow-gateway/) | Implemented |
-| 24-25 | See [portfolio roadmap](docs/portfolio-roadmap.md) | Planned |
+| 24 | [Automation Control Plane](24-automation-control-plane/) | Implemented |
+| 25 | Vertical AI Operations Platform | Planned |
 
 ## Quick validation
 
