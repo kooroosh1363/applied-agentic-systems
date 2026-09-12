@@ -1,0 +1,1 @@
+{"name":"automation-control-plane","version":"1.0.0","private":true,"type":"module","engines":{"node":">=22"},"scripts":{"test":"node --test","demo":"node src/demo.mjs","start":"node src/server.mjs"}}
