@@ -1,16 +1,33 @@
-# Architecture and data flow
+# Architecture
 
-## Components
+The browser, CLI and n8n references call one runner. HTTP accepts candidate configuration and an optional stored baseline ID, never arbitrary corpora, answer fixtures, thresholds, retrieval overrides or a safety-disable flag.
 
-1. **Golden dataset** — versioned questions, relevant document IDs, expected fact IDs, and tags.
-2. **Corpus gate** — blocks known retrieval prompt-injection patterns before the run.
-3. **Retriever adapter** — deterministic lexical implementation for the free local path; replaceable by a vector/search adapter.
-4. **Metric engine** — calculates Precision@K, Recall@K, MRR, nDCG@K, Faithfulness, Citation Accuracy, and Answer Correctness.
-5. **Quality gate** — compares aggregate scores with explicit thresholds.
-6. **Regression gate** — compares the candidate with a checked-in versioned baseline and a bounded tolerance.
-7. **Audit store** — PostgreSQL schema records dataset, run, case, metric, and finding identities.
-8. **Orchestration** — n8n exports coordinate intake, execution, regression review, and reporting; exports are inactive until configured.
+```mermaid
+flowchart TD
+  UI[Browser workbench] --> API[Local API]
+  CLI[CLI] --> R[Shared runner]
+  API --> R
+  D[Versioned synthetic dataset] --> R
+  R --> A[Retrieval and answer adapters]
+  A --> E[Evidence and outcome evaluation]
+  E --> G[Quality, slice and regression gates]
+  G --> S[Atomic files or PostgreSQL]
+  S --> V[Evidence views and exports]
+```
 
-## Trust boundaries
+Documents and policy are server-owned in this local reference. The evaluated candidate sees authorized documents and the question, never expected fact IDs or expected outcomes. Gold IDs are consumed only by the metric engine. Fault injection is an explicit experimental configuration, not a hidden evaluator feature.
 
-Documents, retrieved chunks, generated claims, citations, and external model scores are untrusted inputs. Only a versioned dataset and policy-approved thresholds may influence a release decision. The local fixture is evidence about code behavior, not model quality in production.
+## Decisions
+
+- Exact evidence attribution is named `quoteSupportRate`; it is not `faithfulness` or semantic entailment. Unknown paraphrases remain unverified.
+- Runtime validation complements the descriptive schema. Cases must be unique at dataset scope. Rankings must contain unique authorized corpus IDs.
+- Language and access-scope filters run before retrieval. Language matching is deliberate; this is bilingual evaluation, not cross-language retrieval.
+- Small synthetic source conflict checks use authored topic/value metadata. No general natural-language contradiction detector is claimed.
+- One shared policy owns thresholds, slice outcome minima and regression tolerance. Candidate API callers cannot override policy.
+- Reports include exact dataset, policy and evaluator fingerprints. A baseline with incompatible metadata is rejected.
+- The UI stores no privileged credentials in localStorage. Each process issues an ephemeral session token; local automation may use an environment-provided token.
+- File persistence is the zero-dependency default; PostgreSQL is opt-in through `DATABASE_URL`. v2 reports include dataset version, and multiple dataset versions coexist.
+
+## Adapter boundary
+
+Ollama calls are loopback-only, bounded and non-redirecting. Their network path is separate from deterministic evaluation. Model-backed execution is labeled `local-model`; test stubs are never advertised as live model evidence. Judge outputs remain advisory even after calibration.
