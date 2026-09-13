@@ -1,1 +1,95 @@
-{"name":"P11 Evaluation Audit Report","nodes":[{"parameters":{"rule":{"interval":[{"field":"days","triggerAtHour":8}]}},"id":"1","name":"Daily Schedule","type":"n8n-nodes-base.scheduleTrigger","typeVersion":1.2,"position":[0,0]},{"parameters":{"jsCode":"return [{json:{generatedAt:new Date().toISOString(),evidenceBoundary:'simulated',notice:'Fixture results are not production model evidence.'}}];"},"id":"2","name":"Build Evidence Notice","type":"n8n-nodes-base.code","typeVersion":2,"position":[240,0]},{"parameters":{"jsCode":"return [{json:{...$json,sections:['dataset version','retrieval metrics','answer metrics','safety findings','regressions','release decision']}}];"},"id":"3","name":"Build Audit Report","type":"n8n-nodes-base.code","typeVersion":2,"position":[480,0]}],"connections":{"Daily Schedule":{"main":[[{"node":"Build Evidence Notice","type":"main","index":0}]]},"Build Evidence Notice":{"main":[[{"node":"Build Audit Report","type":"main","index":0}]]}},"active":false,"settings":{"executionOrder":"v1"},"versionId":"44444444-4444-4444-8444-444444444444"}
+{
+  "name": "P11 Stored Evidence Report",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "if(!/^[a-f0-9-]{36}$/.test($json.runId||''))throw new Error('runId required');return [{json:{runId:$json.runId}}];"
+      },
+      "id": "Validate Report ID",
+      "name": "Validate Report ID",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ ($env.EVALUATOR_URL || 'http://127.0.0.1:8110') + '/api/runs/' + $json.runId }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "={{ \"Bearer \" + $env.P11_API_TOKEN }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "request",
+      "name": "Workbench API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "if(!$json.results||!$json.datasetHash)throw new Error('Missing report evidence');return [{json:{runId:$json.runId,datasetHash:$json.datasetHash,policyHash:$json.policyHash,summary:$json.summary,regression:$json.regression,evidence:$json.evidence,notices:$json.notices}}];"
+      },
+      "id": "Report Actual Metrics",
+      "name": "Report Actual Metrics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 0]
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Report ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Report ID": {
+      "main": [
+        [
+          {
+            "node": "Workbench API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workbench API": {
+      "main": [
+        [
+          {
+            "node": "Report Actual Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

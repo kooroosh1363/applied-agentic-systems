@@ -1,1 +1,19 @@
-{"name":"enterprise-rag-evaluation-platform","private":true,"type":"module","scripts":{"test":"node --test","evaluate":"node src/cli.mjs","start":"node src/server.mjs"},"engines":{"node":">=22"}}
+{
+  "name": "enterprise-rag-evaluation-platform",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "evaluate": "node src/cli.mjs",
+    "ablation": "node src/cli.mjs ablation",
+    "start": "node src/server.mjs",
+    "test:postgres": "node scripts/postgres-check.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "optionalDependencies": {
+    "pg": "8.16.3"
+  }
+}

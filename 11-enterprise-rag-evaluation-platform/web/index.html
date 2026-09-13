@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Evidence / RAG Evaluation Workbench</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Evidence home"
+        ><span class="brand-icon">e.</span
+        ><span>evidence<span class="brand-dot">/</span></span></a
+      >
+      <div class="workspace-label">EVALUATION WORKSPACE</div>
+      <nav>
+        <button class="nav-item active" data-tab="overview">
+          <span>◈</span> Overview</button
+        ><button class="nav-item" data-tab="cases">
+          <span>▤</span> Case explorer <b id="case-count">—</b></button
+        ><button class="nav-item" data-tab="experiments">
+          <span>⌘</span> Experiments</button
+        ><button class="nav-item" data-tab="history">
+          <span>◷</span> Run history</button
+        ><button class="nav-item" data-tab="method">
+          <span>ⓘ</span> Method & limits
+        </button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="status-dot"></div>
+        Local workspace
+        <p>Project 11 · Applied Agentic Systems</p>
+        <small id="engine-label">Connecting…</small>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <div class="breadcrumbs">Workspace <span>/</span> RAG evaluation</div>
+        <div class="header-right">
+          <span class="local-badge">● Local execution</span
+          ><button class="quiet" id="record-mode">Focus mode</button>
+        </div>
+      </header>
+      <div class="content">
+        <section class="page-intro">
+          <div>
+            <div class="eyebrow">MEASURE BEFORE YOU RELEASE</div>
+            <h1>RAG Evaluation Workbench<span>.</span></h1>
+            <p>
+              Trace every answer. Compare every change. Make the release
+              decision visible.
+            </p>
+          </div>
+          <div class="version-pill">v2.0 <span>REFERENCE</span></div>
+        </section>
+        <div class="notice">
+          <span class="notice-icon">i</span
+          ><span
+            ><strong>Synthetic benchmark.</strong> Exact quote support measures
+            source attribution. Semantic entailment is not measured.</span
+          ><button class="text-button" data-tab="method">
+            Read methodology ↗
+          </button>
+        </div>
+        <section class="panel control-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Configure a candidate</h2>
+              <p>
+                Run against the same versioned corpus and evaluation policy.
+              </p>
+            </div>
+            <span class="label-chip" id="dataset-label">Loading dataset</span>
+          </div>
+          <div class="controls">
+            <label
+              >Retrieval method<select id="retriever">
+                <option value="bm25">BM25 · term-weighted</option>
+                <option value="lexical">Lexical · token overlap</option>
+                <option value="embedding" disabled>
+                  Local embeddings · configure model
+                </option>
+              </select></label
+            ><label
+              >Top K<select id="top-k">
+                <option>1</option>
+                <option selected>2</option>
+                <option>3</option>
+                <option>5</option>
+              </select></label
+            ><label
+              >Candidate scenario<select id="fault">
+                <option value="none">Clean candidate</option>
+                <option value="wrong-number">Inject a wrong number</option>
+                <option value="wrong-citation">Replace citations</option>
+                <option value="drop-relevant">Remove top-ranked result</option>
+              </select></label
+            ><label
+              >Answer mode<select id="generator">
+                <option value="extractive">
+                  Extractive · exact source sentences
+                </option>
+                <option value="ollama" disabled>
+                  Local LLM · configure model
+                </option>
+              </select></label
+            ><button class="primary" id="run">
+              Run evaluation <span>↗</span>
+            </button>
+          </div>
+          <div class="control-footer">
+            <label class="toggle"
+              ><input type="checkbox" id="rerank" /> Phrase reranking
+              <span class="muted">deterministic</span></label
+            ><label
+              >Min. query coverage
+              <input
+                id="coverage"
+                type="number"
+                min="0"
+                max="1"
+                step="0.05"
+                value="0.3" /></label
+            ><span id="baseline-label">Baseline: BM25 / K=2 / extractive</span
+            ><button id="clear-baseline" class="text-button" hidden>
+              Reset baseline
+            </button>
+          </div>
+        </section>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div id="progress" class="progress" role="status" hidden>
+          <span class="spinner"></span>
+          <div>
+            <strong>Evaluating the candidate</strong>
+            <p>
+              Retrieving evidence, checking claims and comparing release gates…
+            </p>
+          </div>
+        </div>
+        <section id="overview" class="tab-panel">
+          <div class="metric-grid" id="metrics"></div>
+          <div class="overview-grid">
+            <section class="panel results-panel">
+              <div class="panel-heading">
+                <div>
+                  <div class="eyebrow">QUALITY PROFILE</div>
+                  <h2>Baseline vs. candidate</h2>
+                </div>
+                <div class="legend">
+                  <span class="baseline-key"></span> Baseline
+                  <span class="candidate-key"></span> Candidate
+                </div>
+              </div>
+              <div id="quality-bars" class="bars"></div>
+              <p class="footnote">
+                Metrics exclude non-applicable cases; sample counts are shown.
+                Precision@K uses configured K.
+              </p>
+            </section>
+            <section class="panel decision-panel" id="decision">
+              <div class="eyebrow">RELEASE GATE</div>
+              <div class="empty-symbol">◈</div>
+              <h2>Evidence comes first.</h2>
+              <p>
+                Run a candidate to see which checks pass, which fail, and why.
+              </p>
+              <div class="decision-placeholder">No evaluation has run yet</div>
+            </section>
+          </div>
+          <section class="panel slice-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Look beyond the average</h2>
+                <p>Quality by language, question type and risk scenario.</p>
+              </div>
+              <span class="label-chip">SLICE GATES</span>
+            </div>
+            <div id="slices" class="slice-grid"></div>
+          </section>
+        </section>
+        <section id="cases" class="tab-panel" hidden>
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Case explorer</h2>
+                <p>
+                  Inspect the question, retrieved source and verified quote
+                  together.
+                </p>
+              </div>
+              <select id="case-filter">
+                <option value="all">All cases</option>
+                <option value="changed">Changed vs. baseline</option>
+                <option value="failed">Incorrect outcome</option>
+                <option value="fa">Persian</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <div class="case-layout">
+              <div id="case-list"></div>
+              <article id="case-detail">
+                <div class="empty-state">
+                  Run an evaluation to inspect the evidence.
+                </div>
+              </article>
+            </div>
+          </section>
+        </section>
+        <section id="experiments" class="tab-panel" hidden>
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Component ablations</h2>
+                <p>
+                  Compare lexical retrieval, BM25, top K and phrase reranking on
+                  identical cases.
+                </p>
+              </div>
+              <button id="ablate" class="primary">Run 4 variants ↗</button>
+            </div>
+            <div id="ablation-results" class="empty-state">
+              Ablations isolate one engineering choice at a time. Each variant
+              is a real local execution.
+            </div>
+          </section>
+          <section class="panel judge-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Advisory model judge</h2>
+                <p>
+                  Evaluate a configured local judge separately. It never
+                  overrides release gates.
+                </p>
+              </div>
+              <button id="judge" class="quiet" disabled>
+                Configure local judge first
+              </button>
+            </div>
+            <div id="judge-results"></div>
+            <details>
+              <summary>Calibrate against independent human labels</summary>
+              <p>
+                Import JSON rows with caseId, expected, predicted, labelSource:
+                independent-human and reviewer. Model-generated labels do not
+                qualify.
+              </p>
+              <input id="calibration-file" type="file" accept=".json" /><button
+                id="calibrate"
+                class="quiet"
+              >
+                Calculate calibration
+              </button>
+              <pre id="calibration-results"></pre>
+            </details>
+          </section>
+        </section>
+        <section id="history" class="tab-panel" hidden>
+          <section class="panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Run history</h2>
+                <p>Persisted results with dataset and policy fingerprints.</p>
+              </div>
+              <button class="quiet" id="refresh-history">Refresh</button>
+            </div>
+            <div id="history-list" class="empty-state">No saved runs yet.</div>
+          </section>
+        </section>
+        <section id="method" class="tab-panel" hidden>
+          <section class="panel method">
+            <div class="eyebrow">KNOW WHAT THE NUMBERS MEAN</div>
+            <h2>Evidence, with boundaries.</h2>
+            <div class="method-grid">
+              <article>
+                <h3>01 / Retrieval quality</h3>
+                <p>
+                  Recall, Precision@K, MRR and binary nDCG use authored
+                  relevance labels. Duplicate ranks and unauthorized sources are
+                  rejected. No-answer cases have N/A retrieval scores.
+                </p>
+              </article>
+              <article>
+                <h3>02 / Answer attribution</h3>
+                <p>
+                  Exact quote support checks a complete sentence against
+                  retrieved source text. Fact coverage uses corpus-owned
+                  reference statements. Paraphrases remain unverified. A correct
+                  quote can still come from a factually wrong source.
+                </p>
+              </article>
+              <article>
+                <h3>03 / Release policy</h3>
+                <p>
+                  Metric gates, slice gates, expected safety outcomes and
+                  compatible-baseline regression all contribute. A passing
+                  result is eligible for human review, never an automatic
+                  production release.
+                </p>
+              </article>
+              <article>
+                <h3>04 / Benchmark limits</h3>
+                <p>
+                  33 synthetic, authored cases in English and Persian. They are
+                  not independently human-reviewed. Thresholds are illustrative.
+                  Phrase reranking is not a neural cross-encoder. Conflict
+                  checks use authored topic/value metadata.
+                </p>
+              </article>
+              <article>
+                <h3>05 / Model adapters</h3>
+                <p>
+                  Optional Ollama models run on your own computer. Configure
+                  OLLAMA_EMBED_MODEL, OLLAMA_MODEL or OLLAMA_JUDGE_MODEL before
+                  starting. Live model runs may be slow and are not guaranteed
+                  to pass. No paid API is required.
+                </p>
+              </article>
+              <article>
+                <h3>06 / Statistical uncertainty</h3>
+                <p>
+                  Paired bootstrap intervals describe observed outcome
+                  differences on this synthetic set. Shared documents make cases
+                  correlated. These intervals do not establish customer
+                  performance or universal superiority.
+                </p>
+              </article>
+            </div>
+          </section>
+        </section>
+        <footer>
+          <span id="run-meta">Ready for your first evaluation.</span>
+          <div id="exports" hidden>
+            <button class="text-button" data-export="json">JSON ↓</button
+            ><button class="text-button" data-export="csv">CSV ↓</button
+            ><button class="text-button" data-export="html">Report ↓</button>
+          </div>
+        </footer>
+      </div>
+    </main>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

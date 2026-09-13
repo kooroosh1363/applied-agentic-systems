@@ -1,0 +1,180 @@
+{
+  "engineVersion": "2.0.0",
+  "datasetHash": "2409ed6a66836df468510f7efc6c5afa3df2acad26665cda8796ca14ec090f67",
+  "policyHash": "7d9c8e61480a656ee67727d7a6b556a6e82aa6f7602f37e69b79b951e7217f59",
+  "evidence": {
+    "dataset": "synthetic",
+    "reviewStatus": "authored-unreviewed",
+    "execution": "deterministic-local",
+    "semanticEntailment": "not_measured",
+    "externalDelivery": false
+  },
+  "notice": "Measured on an authored synthetic development set, not independent holdout evidence.",
+  "clean": {
+    "config": {
+      "retriever": "bm25",
+      "k": 2,
+      "rerank": false,
+      "generator": "extractive",
+      "fault": "none",
+      "minQueryCoverage": 0.3
+    },
+    "metrics": {
+      "precisionAtK": 0.5714285714285714,
+      "recallAtK": 1,
+      "mrr": 1,
+      "ndcgAtK": 1,
+      "quoteSupportRate": 1,
+      "citationPrecision": 1,
+      "factCoverage": 1,
+      "outcomeAccuracy": 1
+    },
+    "failures": [],
+    "regressions": [],
+    "releaseDecision": "eligible_for_human_review"
+  },
+  "wrongNumber": {
+    "config": {
+      "retriever": "bm25",
+      "k": 2,
+      "rerank": false,
+      "generator": "extractive",
+      "fault": "wrong-number",
+      "minQueryCoverage": 0.3
+    },
+    "metrics": {
+      "precisionAtK": 0.5714285714285714,
+      "recallAtK": 1,
+      "mrr": 1,
+      "ndcgAtK": 1,
+      "quoteSupportRate": 0.6538461538461539,
+      "citationPrecision": 0.6538461538461539,
+      "factCoverage": 0.6538461538461539,
+      "outcomeAccuracy": 0.45454545454545453
+    },
+    "failures": [
+      "quoteSupportRate below 1",
+      "citationPrecision below 1",
+      "factCoverage below 0.8",
+      "outcomeAccuracy below 0.9",
+      "slice language:en below 0.75",
+      "slice answerable below 0.75",
+      "slice numeric below 0.75",
+      "slice language:fa below 0.75",
+      "slice multi-document below 0.75"
+    ],
+    "regressions": [
+      "quoteSupportRate",
+      "citationPrecision",
+      "factCoverage",
+      "outcomeAccuracy"
+    ],
+    "releaseDecision": "blocked"
+  },
+  "ablations": [
+    {
+      "config": {
+        "retriever": "lexical",
+        "k": 1,
+        "rerank": false,
+        "generator": "extractive",
+        "fault": "none",
+        "minQueryCoverage": 0.3
+      },
+      "metrics": {
+        "precisionAtK": 1,
+        "recallAtK": 0.9285714285714286,
+        "mrr": 1,
+        "ndcgAtK": 1,
+        "quoteSupportRate": 1,
+        "citationPrecision": 1,
+        "factCoverage": 0.9615384615384616,
+        "outcomeAccuracy": 0.9393939393939394
+      },
+      "failures": [
+        "slice conflicting below 0.75"
+      ],
+      "regressions": [
+        "recallAtK",
+        "factCoverage",
+        "outcomeAccuracy"
+      ],
+      "releaseDecision": "blocked"
+    },
+    {
+      "config": {
+        "retriever": "bm25",
+        "k": 1,
+        "rerank": false,
+        "generator": "extractive",
+        "fault": "none",
+        "minQueryCoverage": 0.3
+      },
+      "metrics": {
+        "precisionAtK": 1,
+        "recallAtK": 0.9285714285714286,
+        "mrr": 1,
+        "ndcgAtK": 1,
+        "quoteSupportRate": 1,
+        "citationPrecision": 1,
+        "factCoverage": 0.9615384615384616,
+        "outcomeAccuracy": 0.9393939393939394
+      },
+      "failures": [
+        "slice conflicting below 0.75"
+      ],
+      "regressions": [
+        "recallAtK",
+        "factCoverage",
+        "outcomeAccuracy"
+      ],
+      "releaseDecision": "blocked"
+    },
+    {
+      "config": {
+        "retriever": "bm25",
+        "k": 2,
+        "rerank": false,
+        "generator": "extractive",
+        "fault": "none",
+        "minQueryCoverage": 0.3
+      },
+      "metrics": {
+        "precisionAtK": 0.5714285714285714,
+        "recallAtK": 1,
+        "mrr": 1,
+        "ndcgAtK": 1,
+        "quoteSupportRate": 1,
+        "citationPrecision": 1,
+        "factCoverage": 1,
+        "outcomeAccuracy": 1
+      },
+      "failures": [],
+      "regressions": [],
+      "releaseDecision": "eligible_for_human_review"
+    },
+    {
+      "config": {
+        "retriever": "bm25",
+        "k": 2,
+        "rerank": true,
+        "generator": "extractive",
+        "fault": "none",
+        "minQueryCoverage": 0.3
+      },
+      "metrics": {
+        "precisionAtK": 0.5714285714285714,
+        "recallAtK": 1,
+        "mrr": 1,
+        "ndcgAtK": 1,
+        "quoteSupportRate": 1,
+        "citationPrecision": 1,
+        "factCoverage": 1,
+        "outcomeAccuracy": 1
+      },
+      "failures": [],
+      "regressions": [],
+      "releaseDecision": "eligible_for_human_review"
+    }
+  ]
+}

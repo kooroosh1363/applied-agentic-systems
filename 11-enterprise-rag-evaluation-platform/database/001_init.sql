@@ -1,30 +1,17 @@
-CREATE TABLE IF NOT EXISTS evaluation_datasets (
-  dataset_id text PRIMARY KEY,
-  version text NOT NULL,
-  evidence_boundary text NOT NULL CHECK (evidence_boundary IN ('simulated','provider_verified')),
-  created_at timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (dataset_id, version)
+-- v2 tables are additive: existing v1 audit data is not destroyed.
+CREATE TABLE IF NOT EXISTS p11_reports (
+ run_id uuid PRIMARY KEY,
+ dataset_id text NOT NULL,
+ dataset_version text NOT NULL,
+ dataset_hash text NOT NULL CHECK (length(dataset_hash)=64),
+ report jsonb NOT NULL,
+ checksum text NOT NULL CHECK (length(checksum)=64),
+ created_at timestamptz NOT NULL DEFAULT now(),
+ CHECK (jsonb_typeof(report)='object'),
+ CHECK (report ?& ARRAY['datasetId','datasetVersion','datasetHash','runId']),
+ CHECK (report->>'datasetId'=dataset_id),
+ CHECK (report->>'datasetVersion'=dataset_version),
+ CHECK (report->>'datasetHash'=dataset_hash),
+ CHECK (report->>'runId'=run_id::text)
 );
-CREATE TABLE IF NOT EXISTS evaluation_runs (
-  run_id uuid PRIMARY KEY,
-  dataset_id text NOT NULL REFERENCES evaluation_datasets(dataset_id),
-  candidate_version text NOT NULL,
-  status text NOT NULL CHECK (status IN ('running','passed','failed','blocked')),
-  started_at timestamptz NOT NULL DEFAULT now(),
-  completed_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS case_results (
-  run_id uuid NOT NULL REFERENCES evaluation_runs(run_id),
-  case_id text NOT NULL,
-  status text NOT NULL,
-  metrics jsonb NOT NULL DEFAULT '{}'::jsonb,
-  findings jsonb NOT NULL DEFAULT '[]'::jsonb,
-  PRIMARY KEY (run_id, case_id)
-);
-CREATE TABLE IF NOT EXISTS audit_events (
-  event_id bigserial PRIMARY KEY,
-  run_id uuid REFERENCES evaluation_runs(run_id),
-  event_type text NOT NULL,
-  payload jsonb NOT NULL DEFAULT '{}'::jsonb,
-  created_at timestamptz NOT NULL DEFAULT now()
-);
+CREATE INDEX IF NOT EXISTS p11_reports_dataset_version ON p11_reports(dataset_id,dataset_version,created_at);

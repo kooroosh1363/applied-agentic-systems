@@ -1,0 +1,49 @@
+name: Project 11 integration
+on:
+  pull_request:
+    paths:
+      - '11-enterprise-rag-evaluation-platform/**'
+      - '.github/workflows/p11-integration.yml'
+permissions:
+  contents: read
+jobs:
+  postgres-and-runtime:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: p11_test
+          POSTGRES_USER: p11
+          POSTGRES_PASSWORD: local-ci-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U p11 -d p11_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: 11-enterprise-rag-evaluation-platform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npm run evaluate
+      - run: npm run test:postgres
+        env:
+          DATABASE_URL: postgresql://p11:local-ci-only@127.0.0.1:5432/p11_test
+      - name: Build and smoke-test the local Docker image
+        run: |
+          docker compose up --build -d evaluator
+          for attempt in $(seq 1 20); do
+            if curl --fail http://127.0.0.1:8110/health; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs evaluator
+          exit 1
+      - if: always() && hashFiles('11-enterprise-rag-evaluation-platform/docker-compose.yml') != ''
+        run: docker compose down
