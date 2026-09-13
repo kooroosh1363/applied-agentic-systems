@@ -7,6 +7,7 @@ import {
   unlink,
 } from "node:fs/promises";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 import { ensure, fingerprint } from "./core.mjs";
 export class FileStore {
@@ -126,6 +127,6 @@ export async function createStore(env = process.env) {
     ).init();
   }
   return new FileStore(
-    env.P11_DATA_DIR || new URL("../data/", import.meta.url).pathname,
+    env.P11_DATA_DIR || fileURLToPath(new URL("../data/", import.meta.url)),
   ).init();
 }
