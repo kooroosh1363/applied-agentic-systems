@@ -18,7 +18,7 @@ jobs:
           POSTGRES_PASSWORD: local-ci-only
         ports: ['5432:5432']
         options: >-
-          --health-cmd 'pg_isready -U p11 -d p11_test'
+          --health-cmd "pg_isready -U p11 -d p11_test"
           --health-interval 5s
           --health-timeout 3s
           --health-retries 10
@@ -45,5 +45,5 @@ jobs:
           done
           docker compose logs evaluator
           exit 1
-      - if: always()
+      - if: always() && hashFiles('11-enterprise-rag-evaluation-platform/docker-compose.yml') != ''
         run: docker compose down
