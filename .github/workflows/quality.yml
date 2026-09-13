@@ -16,6 +16,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - run: npm run check
 
   compose-validation:
@@ -36,3 +39,7 @@ jobs:
         env:
           CONTROL_CREDENTIALS: '[]'
         run: docker compose -f 24-automation-control-plane/docker-compose.yml config --quiet
+      - name: Validate Project 25 Compose configuration
+        env:
+          OPERATIONS_CONFIG: '{}'
+        run: docker compose -f 25-vertical-ai-operations-platform/docker-compose.yml config --quiet

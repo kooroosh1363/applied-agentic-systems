@@ -57,7 +57,7 @@ Every project must provide evidence for its claims:
 | 22 | [Event-Driven Automation Platform](22-event-driven-automation-platform/) | Implemented |
 | 23 | [Reliable AI Workflow Gateway](23-reliable-ai-workflow-gateway/) | Implemented |
 | 24 | [Automation Control Plane](24-automation-control-plane/) | Implemented |
-| 25 | Vertical AI Operations Platform | Planned |
+| 25 | [Vertical AI Operations Platform](25-vertical-ai-operations-platform/) | Implemented |
 
 ## Quick validation
 

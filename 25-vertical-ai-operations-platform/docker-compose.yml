@@ -1,0 +1,19 @@
+services:
+  operations:
+    image: python:3.12-slim
+    user: "1000:1000"
+    working_dir: /app
+    command: python3 -B src/server.py
+    environment:
+      OPERATIONS_CONFIG: ${OPERATIONS_CONFIG:?Generate local credential configuration}
+      OPERATIONS_DB: /data/operations.db
+      OPERATIONS_HOST: 0.0.0.0
+    ports: ["127.0.0.1:3025:3025"]
+    volumes:
+      - .:/app:ro
+      - ./data:/data
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    pids_limit: 64
