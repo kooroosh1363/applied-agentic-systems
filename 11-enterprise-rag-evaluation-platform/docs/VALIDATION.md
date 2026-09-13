@@ -14,7 +14,12 @@ See `benchmarks/local-results.json` for reproducible, measured summaries. Rebuil
 
 ## Integration gates
 
-The PR includes a PostgreSQL 16 service integration job plus Docker image build/health smoke test. Local PostgreSQL execution could not be completed in the managed runtime (running the database under an unprivileged user was unavailable); remote CI outcomes must be checked independently.
+GitHub Actions verified implementation commit `f7e27b14f59ee5c642c7cb75291896ab91eeaa67`:
+
+- [Project 11 integration run 34762166259](https://github.com/kooroosh1363/applied-agentic-systems/actions/runs/34762166259): **passed**. Actual PostgreSQL 16 migration, report round-trip, dataset-version coexistence and duplicate UUID rejection; Node 22 tests/evaluation; Docker image build and HTTP health smoke test.
+- [Repository Quality run 34762166244](https://github.com/kooroosh1363/applied-agentic-systems/actions/runs/34762166244): **passed**.
+
+The first integration attempt failed before application execution because of service health-command quoting; the command was corrected and the full job passed. Local PostgreSQL execution was unavailable in the managed runtime; the real-database evidence above comes from GitHub Actions, not a mock.
 
 Optional Ollama embedding/generation/judge adapters were tested against explicit network stubs only. No installed real model or independent human calibration dataset was available in this environment. No live-model quality claim is made. Windows launcher was inspected, while execution/browser testing took place on Linux; running it on the user's Acer is the remaining device-specific check.
 
